@@ -16,7 +16,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const { user, loading, isPremium } = useAuth();
 
-  // Core navigation items only
+  // Core navigation items - all aligned consistently
   const navItems = [
     { id: 'test', label: 'Test', icon: Keyboard },
     { id: 'stats', label: 'Stats', icon: BarChart3 },
@@ -114,8 +114,9 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
               </div>
             </div>
 
-            {/* Desktop Navigation - Core items only */}
-            <nav className="hidden lg:flex items-center space-x-2">
+            {/* Desktop Navigation - All items aligned consistently */}
+            <nav className="hidden lg:flex items-center space-x-1">
+              {/* Core Navigation Items */}
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = currentView === item.id;
@@ -140,7 +141,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 );
               })}
 
-              {/* Premium Dropdown */}
+              {/* Premium Dropdown - Aligned with other nav items */}
               <div className="relative group">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -198,13 +199,13 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 </div>
               </div>
 
-              {/* Settings */}
+              {/* Settings - Aligned with other nav items */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleNavClick('settings')}
                 className={`
-                  p-2 rounded-lg transition-all duration-200
+                  flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
                   ${currentView === 'settings'
                     ? 'bg-gray-600 text-white shadow-lg shadow-gray-600/25' 
                     : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
@@ -212,6 +213,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 `}
               >
                 <Settings className="w-4 h-4" />
+                <span className="text-sm">Settings</span>
               </motion.button>
             </nav>
 
