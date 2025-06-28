@@ -62,7 +62,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
       <motion.header 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="glass-card p-4 md:p-6 mb-6 md:mb-8"
+        className="glass-card p-4 md:p-6 mb-6 md:mb-8 relative z-40"
       >
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -132,9 +132,9 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 )}
               </motion.button>
 
-              {/* Dropdown Menu */}
-              <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div className="glass-card p-2 border border-gray-600/50">
+              {/* Dropdown Menu - Fixed z-index */}
+              <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
+                <div className="glass-card p-2 border border-gray-600/50 shadow-2xl backdrop-blur-md">
                   {premiumItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = currentView === item.id;
