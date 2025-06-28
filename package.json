@@ -14,7 +14,11 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "framer-motion": "^10.16.16",
-    "@supabase/supabase-js": "^2.39.0"
+    "@supabase/supabase-js": "^2.39.0",
+    "stripe": "^14.15.0",
+    "@stripe/stripe-js": "^2.4.0",
+    "openai": "^4.24.7",
+    "socket.io-client": "^4.7.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

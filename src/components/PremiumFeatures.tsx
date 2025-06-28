@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Crown, Zap, TrendingUp, Users, Star, Lock, Check, CreditCard } from 'lucide-react';
+import { Crown, Zap, TrendingUp, Users, Star, Check, CreditCard, Loader } from 'lucide-react';
+import { createStripeCheckout } from '../lib/supabase';
+import { PREMIUM_PLANS } from '../lib/stripe';
 
 interface PremiumFeaturesProps {
   onUpgrade: () => void;
@@ -13,61 +15,69 @@ export function PremiumFeatures({ onUpgrade }: PremiumFeaturesProps) {
   const features = [
     {
       icon: TrendingUp,
-      title: 'Advanced Analytics',
-      description: 'Deep insights into your typing patterns and improvement areas',
+      title: 'AI-Powered Analytics',
+      description: 'Deep insights into your typing patterns with personalized recommendations',
       premium: true
     },
     {
       icon: Users,
-      title: 'Multiplayer Races',
-      description: 'Compete with friends and players worldwide in real-time',
+      title: 'Multiplayer Racing',
+      description: 'Compete with friends and players worldwide in real-time races',
       premium: true
     },
     {
       icon: Star,
-      title: 'Custom Themes',
-      description: 'Personalize your typing experience with premium themes',
+      title: 'Custom Themes & Layouts',
+      description: 'Personalize your typing experience with premium themes and keyboard layouts',
       premium: true
     },
     {
       icon: Zap,
-      title: 'AI-Powered Training',
-      description: 'Personalized lessons based on your weaknesses',
+      title: 'Advanced Training Plans',
+      description: 'Structured learning paths designed by typing experts',
       premium: true
     }
   ];
 
   const plans = [
     {
-      id: 'monthly',
+      id: 'monthly' as const,
       name: 'Monthly',
       price: '$4.99',
       period: '/month',
-      savings: null
+      savings: null,
+      priceId: PREMIUM_PLANS.monthly.priceId
     },
     {
-      id: 'yearly',
+      id: 'yearly' as const,
       name: 'Yearly',
       price: '$39.99',
       period: '/year',
-      savings: 'Save 33%'
+      savings: 'Save 33%',
+      priceId: PREMIUM_PLANS.yearly.priceId
     }
   ];
 
   const handleUpgrade = async () => {
     setIsProcessing(true);
     
-    // In real implementation, this would:
-    // 1. Integrate with Stripe/RevenueCat for payments
-    // 2. Create subscription in backend
-    // 3. Update user's premium status
-    // 4. Redirect to payment flow
-    
-    setTimeout(() => {
-      alert(`Premium upgrade simulation complete!\n\nIn production, this would:\n• Process ${plans.find(p => p.id === selectedPlan)?.price} payment\n• Activate premium features\n• Send confirmation email\n• Update user account status`);
+    try {
+      const selectedPlanData = plans.find(p => p.id === selectedPlan);
+      if (!selectedPlanData) throw new Error('Plan not found');
+
+      const { url } = await createStripeCheckout(selectedPlanData.priceId);
+      
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error('Failed to create checkout session');
+      }
+    } catch (error) {
+      console.error('Upgrade failed:', error);
+      alert('Failed to start upgrade process. Please try again.');
+    } finally {
       setIsProcessing(false);
-      onUpgrade();
-    }, 2000);
+    }
   };
 
   return (
@@ -81,16 +91,8 @@ export function PremiumFeatures({ onUpgrade }: PremiumFeaturesProps) {
         <Crown className="w-16 h-16 text-amber-400 mx-auto mb-4" />
         <h1 className="text-3xl font-bold text-gray-200 mb-4">TypingFlow Premium</h1>
         <p className="text-gray-400 text-lg">
-          Unlock advanced features and take your typing to the next level
+          Unlock advanced features and accelerate your typing journey
         </p>
-        
-        {/* Demo Notice */}
-        <div className="mt-6 bg-blue-600/20 border border-blue-500/40 rounded-lg p-4">
-          <p className="text-blue-300 text-sm">
-            <strong>Demo Mode:</strong> This is a functional UI demonstration. 
-            In production, this would integrate with payment processors like Stripe or RevenueCat.
-          </p>
-        </div>
       </div>
 
       {/* Features Grid */}
@@ -137,7 +139,7 @@ export function PremiumFeatures({ onUpgrade }: PremiumFeaturesProps) {
             {plans.map((plan) => (
               <button
                 key={plan.id}
-                onClick={() => setSelectedPlan(plan.id as 'monthly' | 'yearly')}
+                onClick={() => setSelectedPlan(plan.id)}
                 className={`px-6 py-2 rounded-md font-medium transition-all duration-200 ${
                   selectedPlan === plan.id
                     ? 'bg-primary-600 text-white'
@@ -168,12 +170,13 @@ export function PremiumFeatures({ onUpgrade }: PremiumFeaturesProps) {
           <div className="space-y-4 mb-8">
             {[
               'Unlimited typing tests',
-              'Advanced analytics dashboard',
-              'Multiplayer racing modes',
+              'AI-powered performance analysis',
+              'Real-time multiplayer racing',
               'Custom themes and layouts',
-              'AI-powered training plans',
+              'Advanced training programs',
+              'Detailed progress reports',
               'Priority customer support',
-              'Export detailed reports'
+              'Export performance data'
             ].map((feature, index) => (
               <div key={index} className="flex items-center space-x-3">
                 <Check className="w-5 h-5 text-success-400" />
@@ -195,11 +198,7 @@ export function PremiumFeatures({ onUpgrade }: PremiumFeaturesProps) {
           >
             {isProcessing ? (
               <>
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
-                />
+                <Loader className="w-5 h-5 animate-spin" />
                 <span>Processing...</span>
               </>
             ) : (
@@ -211,7 +210,7 @@ export function PremiumFeatures({ onUpgrade }: PremiumFeaturesProps) {
           </motion.button>
 
           <p className="text-center text-gray-400 text-sm mt-4">
-            7-day free trial • Cancel anytime • Secure payment
+            Secure payment via Stripe • Cancel anytime • 7-day money-back guarantee
           </p>
         </div>
       </div>
