@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Crown, Zap, TrendingUp, Users, Star, Lock, Check } from 'lucide-react';
+import { Crown, Zap, TrendingUp, Users, Star, Lock, Check, CreditCard } from 'lucide-react';
 
 interface PremiumFeaturesProps {
   onUpgrade: () => void;
@@ -8,6 +8,7 @@ interface PremiumFeaturesProps {
 
 export function PremiumFeatures({ onUpgrade }: PremiumFeaturesProps) {
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'yearly'>('monthly');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const features = [
     {
@@ -53,6 +54,22 @@ export function PremiumFeatures({ onUpgrade }: PremiumFeaturesProps) {
     }
   ];
 
+  const handleUpgrade = async () => {
+    setIsProcessing(true);
+    
+    // In real implementation, this would:
+    // 1. Integrate with Stripe/RevenueCat for payments
+    // 2. Create subscription in backend
+    // 3. Update user's premium status
+    // 4. Redirect to payment flow
+    
+    setTimeout(() => {
+      alert(`Premium upgrade simulation complete!\n\nIn production, this would:\n• Process ${plans.find(p => p.id === selectedPlan)?.price} payment\n• Activate premium features\n• Send confirmation email\n• Update user account status`);
+      setIsProcessing(false);
+      onUpgrade();
+    }, 2000);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -66,6 +83,14 @@ export function PremiumFeatures({ onUpgrade }: PremiumFeaturesProps) {
         <p className="text-gray-400 text-lg">
           Unlock advanced features and take your typing to the next level
         </p>
+        
+        {/* Demo Notice */}
+        <div className="mt-6 bg-blue-600/20 border border-blue-500/40 rounded-lg p-4">
+          <p className="text-blue-300 text-sm">
+            <strong>Demo Mode:</strong> This is a functional UI demonstration. 
+            In production, this would integrate with payment processors like Stripe or RevenueCat.
+          </p>
+        </div>
       </div>
 
       {/* Features Grid */}
@@ -158,12 +183,31 @@ export function PremiumFeatures({ onUpgrade }: PremiumFeaturesProps) {
           </div>
 
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onUpgrade}
-            className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-200"
+            whileHover={{ scale: isProcessing ? 1 : 1.05 }}
+            whileTap={{ scale: isProcessing ? 1 : 0.95 }}
+            onClick={handleUpgrade}
+            disabled={isProcessing}
+            className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-2 ${
+              isProcessing 
+                ? 'bg-gray-600 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600'
+            }`}
           >
-            Upgrade to Premium
+            {isProcessing ? (
+              <>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                />
+                <span>Processing...</span>
+              </>
+            ) : (
+              <>
+                <CreditCard className="w-5 h-5" />
+                <span>Upgrade to Premium</span>
+              </>
+            )}
           </motion.button>
 
           <p className="text-center text-gray-400 text-sm mt-4">
