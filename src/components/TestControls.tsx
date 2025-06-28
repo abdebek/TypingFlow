@@ -37,8 +37,10 @@ export function TestControls({
       animate={{ opacity: 1, y: 0 }}
       className="glass-card p-4 md:p-6"
     >
-      {/* Main Controls Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+      {/* Main Controls Grid - Adjust columns based on mode */}
+      <div className={`grid grid-cols-1 gap-6 lg:gap-8 ${
+        config.mode === 'time' ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
+      }`}>
         
         {/* Mode Selection */}
         <div className="space-y-3">
@@ -103,28 +105,46 @@ export function TestControls({
           </div>
         </div>
 
-        {/* Category Selection */}
-        <div className="space-y-3">
-          <h4 className="text-sm font-medium text-gray-400 text-center lg:text-left">Text Category</h4>
-          <div className="flex flex-wrap justify-center lg:justify-start gap-2">
-            {categoryOptions.map((category) => (
-              <motion.button
-                key={category.value}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => onConfigChange({ ...config, textCategory: category.value })}
-                disabled={isActive && !isCompleted}
-                className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
-                  config.textCategory === category.value
-                    ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/25'
-                    : 'bg-dark-800 text-gray-400 hover:text-gray-200 hover:bg-dark-700'
-                } ${isActive && !isCompleted ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                {category.label}
-              </motion.button>
-            ))}
+        {/* Category Selection - Only show for timed mode */}
+        {config.mode === 'time' && (
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-gray-400 text-center lg:text-left">Text Category</h4>
+            <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+              {categoryOptions.map((category) => (
+                <motion.button
+                  key={category.value}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => onConfigChange({ ...config, textCategory: category.value })}
+                  disabled={isActive && !isCompleted}
+                  className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    config.textCategory === category.value
+                      ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/25'
+                      : 'bg-dark-800 text-gray-400 hover:text-gray-200 hover:bg-dark-700'
+                  } ${isActive && !isCompleted ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  {category.label}
+                </motion.button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Words Mode Info - Show when words mode is selected */}
+        {config.mode === 'words' && (
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-gray-400 text-center lg:text-left">Text Type</h4>
+            <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700/30">
+              <div className="flex items-center space-x-2 text-sm text-gray-300">
+                <Type className="w-4 h-4 text-primary-400" />
+                <span>Common words generated automatically</span>
+              </div>
+              <p className="text-xs text-gray-400 mt-2">
+                Word-based tests use a curated list of common English words for consistent difficulty
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Action Buttons */}
