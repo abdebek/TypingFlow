@@ -132,13 +132,10 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 )}
               </motion.button>
 
-              {/* Dropdown Menu with Enhanced Backdrop Blur */}
+              {/* Dropdown Menu with Localized Backdrop Blur */}
               <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
-                {/* Backdrop blur overlay */}
-                <div className="fixed inset-0 bg-dark-950/20 backdrop-blur-sm -z-10" />
-                
-                {/* Dropdown content */}
-                <div className="relative bg-dark-900/95 backdrop-blur-xl border border-gray-600/50 rounded-xl p-2 shadow-2xl shadow-dark-950/50">
+                {/* Dropdown content with backdrop blur applied only to this element */}
+                <div className="relative bg-dark-900/80 backdrop-blur-xl border border-gray-600/50 rounded-xl p-2 shadow-2xl shadow-dark-950/50">
                   {/* Subtle gradient overlay for depth */}
                   <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-xl pointer-events-none" />
                   
