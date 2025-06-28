@@ -66,7 +66,7 @@ export function Footer({ onViewChange }: FooterProps) {
       }
     },
     { 
-      label: 'Challenges & Leaderboard', 
+      label: 'Challenges', 
       action: () => {
         onViewChange?.('leaderboard');
         scrollToTop();
@@ -213,10 +213,10 @@ export function Footer({ onViewChange }: FooterProps) {
                 <motion.button
                   whileHover={{ x: 4 }}
                   onClick={link.action}
-                  className="text-gray-400 hover:text-primary-400 transition-colors text-sm flex items-center space-x-2"
+                  className="text-gray-400 hover:text-primary-400 transition-colors text-sm flex items-start space-x-2 w-full text-left"
                 >
-                  <span className="w-1 h-1 bg-primary-400 rounded-full" />
-                  <span>{link.label}</span>
+                  <span className="w-1 h-1 bg-primary-400 rounded-full mt-2 flex-shrink-0" />
+                  <span className="leading-tight">{link.label}</span>
                 </motion.button>
               </li>
             ))}
@@ -235,10 +235,10 @@ export function Footer({ onViewChange }: FooterProps) {
                 <motion.button
                   whileHover={{ x: 4 }}
                   onClick={link.action}
-                  className="text-gray-400 hover:text-amber-400 transition-colors text-sm flex items-center space-x-2"
+                  className="text-gray-400 hover:text-amber-400 transition-colors text-sm flex items-start space-x-2 w-full text-left"
                 >
-                  <span className="w-1 h-1 bg-amber-400 rounded-full" />
-                  <span>{link.label}</span>
+                  <span className="w-1 h-1 bg-amber-400 rounded-full mt-2 flex-shrink-0" />
+                  <span className="leading-tight">{link.label}</span>
                 </motion.button>
               </li>
             ))}
@@ -260,20 +260,20 @@ export function Footer({ onViewChange }: FooterProps) {
                     <motion.a
                       whileHover={{ x: 4 }}
                       href={link.href}
-                      className="text-gray-400 hover:text-blue-400 transition-colors text-sm flex items-center space-x-2"
+                      className="text-gray-400 hover:text-blue-400 transition-colors text-sm flex items-start space-x-2"
                     >
-                      <Icon className="w-3 h-3" />
-                      <span>{link.label}</span>
-                      <ExternalLink className="w-3 h-3" />
+                      <Icon className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                      <span className="leading-tight">{link.label}</span>
+                      <ExternalLink className="w-3 h-3 mt-0.5 flex-shrink-0" />
                     </motion.a>
                   ) : (
                     <motion.button
                       whileHover={{ x: 4 }}
                       onClick={link.action}
-                      className="text-gray-400 hover:text-blue-400 transition-colors text-sm flex items-center space-x-2"
+                      className="text-gray-400 hover:text-blue-400 transition-colors text-sm flex items-start space-x-2 w-full text-left"
                     >
-                      <Icon className="w-3 h-3" />
-                      <span>{link.label}</span>
+                      <Icon className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                      <span className="leading-tight">{link.label}</span>
                     </motion.button>
                   )}
                 </li>
@@ -289,21 +289,21 @@ export function Footer({ onViewChange }: FooterProps) {
             <span>Prize Categories</span>
           </h4>
           <ul className="space-y-2 text-sm">
-            <li className="text-gray-400 flex items-center space-x-2">
-              <Star className="w-3 h-3 text-purple-400" />
-              <span>Creative Use of AI</span>
+            <li className="text-gray-400 flex items-start space-x-2">
+              <Star className="w-3 h-3 text-purple-400 mt-0.5 flex-shrink-0" />
+              <span className="leading-tight">Creative Use of AI</span>
             </li>
-            <li className="text-gray-400 flex items-center space-x-2">
-              <Star className="w-3 h-3 text-pink-400" />
-              <span>Most Beautiful UI</span>
+            <li className="text-gray-400 flex items-start space-x-2">
+              <Star className="w-3 h-3 text-pink-400 mt-0.5 flex-shrink-0" />
+              <span className="leading-tight">Most Beautiful UI</span>
             </li>
-            <li className="text-gray-400 flex items-center space-x-2">
-              <Star className="w-3 h-3 text-blue-400" />
-              <span>Sharpest Problem Fit</span>
+            <li className="text-gray-400 flex items-start space-x-2">
+              <Star className="w-3 h-3 text-blue-400 mt-0.5 flex-shrink-0" />
+              <span className="leading-tight">Sharpest Problem Fit</span>
             </li>
-            <li className="text-gray-400 flex items-center space-x-2">
-              <Star className="w-3 h-3 text-green-400" />
-              <span>Future Unicorn</span>
+            <li className="text-gray-400 flex items-start space-x-2">
+              <Star className="w-3 h-3 text-green-400 mt-0.5 flex-shrink-0" />
+              <span className="leading-tight">Future Unicorn</span>
             </li>
           </ul>
         </div>
