@@ -1,0 +1,164 @@
+import React from 'react';
+import { RefreshCw, Clock, Type, Play, Pause } from 'lucide-react';
+import { TestConfig } from '../types';
+import { motion } from 'framer-motion';
+
+interface TestControlsProps {
+  config: TestConfig;
+  onConfigChange: (config: TestConfig) => void;
+  onRestart: () => void;
+  onPauseResume: () => void;
+  isActive: boolean;
+  isPaused: boolean;
+  isCompleted: boolean;
+}
+
+export function TestControls({ 
+  config, 
+  onConfigChange, 
+  onRestart, 
+  onPauseResume,
+  isActive, 
+  isPaused,
+  isCompleted 
+}: TestControlsProps) {
+  const timeOptions = [15, 30, 60, 120];
+  const wordOptions = [25, 50, 100, 200];
+  const categoryOptions = [
+    { value: 'quotes', label: 'Quotes' },
+    { value: 'programming', label: 'Code' },
+    { value: 'literature', label: 'Literature' },
+    { value: 'news', label: 'News' }
+  ] as const;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="glass-card p-4 md:p-6"
+    >
+      {/* Main Controls Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        
+        {/* Mode Selection */}
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-400 text-center lg:text-left">Test Mode</h4>
+          <div className="flex justify-center lg:justify-start space-x-2">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => onConfigChange({ ...config, mode: 'time' })}
+              disabled={isActive && !isCompleted}
+              className={`flex items-center space-x-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 ${
+                config.mode === 'time'
+                  ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25'
+                  : 'bg-dark-800 text-gray-400 hover:text-gray-200 hover:bg-dark-700'
+              } ${isActive && !isCompleted ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              <Clock className="w-4 h-4" />
+              <span>Timed</span>
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => onConfigChange({ ...config, mode: 'words' })}
+              disabled={isActive && !isCompleted}
+              className={`flex items-center space-x-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 ${
+                config.mode === 'words'
+                  ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25'
+                  : 'bg-dark-800 text-gray-400 hover:text-gray-200 hover:bg-dark-700'
+              } ${isActive && !isCompleted ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              <Type className="w-4 h-4" />
+              <span>Words</span>
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Duration/Words Selection */}
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-400 text-center lg:text-left">
+            {config.mode === 'time' ? 'Duration' : 'Word Count'}
+          </h4>
+          <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+            {(config.mode === 'time' ? timeOptions : wordOptions).map((option) => (
+              <motion.button
+                key={option}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => onConfigChange({
+                  ...config,
+                  [config.mode === 'time' ? 'timeLimit' : 'wordLimit']: option
+                })}
+                disabled={isActive && !isCompleted}
+                className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 min-w-[60px] ${
+                  (config.mode === 'time' ? config.timeLimit : config.wordLimit) === option
+                    ? 'bg-success-600 text-white shadow-lg shadow-success-600/25'
+                    : 'bg-dark-800 text-gray-400 hover:text-gray-200 hover:bg-dark-700'
+                } ${isActive && !isCompleted ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {option}{config.mode === 'time' ? 's' : ''}
+              </motion.button>
+            ))}
+          </div>
+        </div>
+
+        {/* Category Selection */}
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-400 text-center lg:text-left">Text Category</h4>
+          <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+            {categoryOptions.map((category) => (
+              <motion.button
+                key={category.value}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => onConfigChange({ ...config, textCategory: category.value })}
+                disabled={isActive && !isCompleted}
+                className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  config.textCategory === category.value
+                    ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/25'
+                    : 'bg-dark-800 text-gray-400 hover:text-gray-200 hover:bg-dark-700'
+                } ${isActive && !isCompleted ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {category.label}
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="mt-6 pt-6 border-t border-gray-700/30">
+        <div className="flex justify-center space-x-4">
+          {/* Pause/Resume Button - Only show when test is active */}
+          {isActive && !isCompleted && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onPauseResume}
+              className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 ${
+                isPaused 
+                  ? 'bg-success-600 text-white hover:bg-success-700'
+                  : 'bg-amber-600 text-white hover:bg-amber-700'
+              }`}
+            >
+              {isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
+              <span>{isPaused ? 'Resume' : 'Pause'}</span>
+            </motion.button>
+          )}
+
+          {/* Restart Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onRestart}
+            className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-success-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>New Test</span>
+          </motion.button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
