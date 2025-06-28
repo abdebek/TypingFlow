@@ -58,6 +58,12 @@ export default {
           950: '#0a0e1a',
         }
       },
+      // Wider max-width options for better space utilization
+      maxWidth: {
+        '8xl': '88rem',
+        '9xl': '96rem',
+        '10xl': '104rem',
+      },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.3s ease-out',

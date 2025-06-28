@@ -238,28 +238,25 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
               </div>
             )}
 
-            {/* Built on Bolt Badge - BIGGER VERSION */}
+            {/* Built on Bolt Badge - More Subtle */}
             <motion.a
               href="https://bolt.new"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center space-x-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200"
-              title="Built with Bolt.new - World's Largest Hackathon Entry"
+              className="flex items-center space-x-2 bg-dark-800/50 text-gray-400 hover:text-gray-200 px-3 py-2 rounded-lg transition-all duration-200 border border-gray-700/30"
+              title="Built with Bolt.new"
             >
               <img
                 src="/black_circle_360x360.png"
                 alt="Built on Bolt"
-                className="w-8 h-8"
+                className="w-5 h-5"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                 }}
               />
-              <div className="flex flex-col">
-                <span className="text-sm font-bold">Built on Bolt</span>
-                <span className="text-xs opacity-90">Hackathon Entry</span>
-              </div>
+              <span className="text-sm">Built on Bolt</span>
             </motion.a>
           </div>
 
@@ -277,28 +274,25 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
               </motion.button>
             )}
 
-            {/* Built on Bolt Badge - Mobile BIGGER VERSION */}
+            {/* Built on Bolt Badge - Mobile */}
             <motion.a
               href="https://bolt.new"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-2 rounded-lg text-sm font-medium"
+              className="flex items-center space-x-1 bg-dark-800/50 text-gray-400 px-2 py-1 rounded text-xs"
               title="Built with Bolt.new"
             >
               <img
                 src="/black_circle_360x360.png"
                 alt="Built on Bolt"
-                className="w-6 h-6"
+                className="w-4 h-4"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                 }}
               />
-              <div className="flex flex-col">
-                <span className="text-xs font-bold">Built on Bolt</span>
-                <span className="text-xs opacity-80">Hackathon</span>
-              </div>
+              <span>Bolt</span>
             </motion.a>
 
             <motion.button

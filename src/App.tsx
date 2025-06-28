@@ -255,7 +255,8 @@ function App() {
           onRemove={removeNotification} 
         />
 
-        <div className="relative z-10 container mx-auto px-4 py-4 md:py-8 max-w-7xl">
+        {/* Use wider container and better space utilization */}
+        <div className="relative z-10 container mx-auto px-4 py-4 md:py-8 max-w-9xl">
           <Header currentView={currentView} onViewChange={setCurrentView} />
 
           <AnimatePresence mode="wait">
@@ -321,9 +322,9 @@ function App() {
                       </motion.div>
                     )}
 
-                    {/* Stats and WPM Graph */}
-                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
-                      <div className="xl:col-span-2">
+                    {/* Stats and WPM Graph - Better layout for wider screens */}
+                    <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 md:gap-6">
+                      <div className="xl:col-span-3">
                         <StatsDisplay 
                           stats={stats} 
                           config={config} 
