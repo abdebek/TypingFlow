@@ -8,7 +8,7 @@ interface TestControlsProps {
   onConfigChange: (config: TestConfig) => void;
   onRestart: () => void;
   onPauseResume: () => void;
-  onFocusInput: () => void; // Add this prop
+  onFocusInput: () => void;
   isActive: boolean;
   isPaused: boolean;
   isCompleted: boolean;
@@ -19,7 +19,7 @@ export function TestControls({
   onConfigChange, 
   onRestart, 
   onPauseResume,
-  onFocusInput, // Add this prop
+  onFocusInput,
   isActive, 
   isPaused,
   isCompleted 
@@ -33,16 +33,30 @@ export function TestControls({
     { value: 'news', label: 'News' }
   ] as const;
 
+  const scrollToTextInput = () => {
+    // Scroll to text display area instead of virtual keyboard
+    const textDisplay = document.getElementById('text-display-area');
+    if (textDisplay) {
+      textDisplay.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center',
+        inline: 'nearest'
+      });
+    }
+    // Focus input after scroll
+    setTimeout(() => onFocusInput(), 300);
+  };
+
   const handleConfigChange = (newConfig: TestConfig) => {
     onConfigChange(newConfig);
-    // Focus input after config change
-    setTimeout(() => onFocusInput(), 200);
+    // Scroll to text input after config change
+    setTimeout(() => scrollToTextInput(), 200);
   };
 
   const handleRestart = () => {
     onRestart();
-    // Focus input after restart
-    setTimeout(() => onFocusInput(), 200);
+    // Scroll to text input after restart
+    setTimeout(() => scrollToTextInput(), 200);
   };
 
   return (

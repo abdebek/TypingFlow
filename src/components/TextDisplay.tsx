@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 import { CharacterState } from '../types';
 import { motion } from 'framer-motion';
 
@@ -11,6 +11,8 @@ interface TextDisplayProps {
 }
 
 export function TextDisplay({ characterStates, currentIndex, onFocus, isActive, isCompleted }: TextDisplayProps) {
+  const textDisplayRef = useRef<HTMLDivElement>(null);
+
   // Calculate visible text window (2 lines worth of characters)
   const visibleText = useMemo(() => {
     const CHARS_PER_LINE = 60; // Approximate characters per line
@@ -40,6 +42,17 @@ export function TextDisplay({ characterStates, currentIndex, onFocus, isActive, 
     };
   }, [characterStates, currentIndex]);
 
+  // Scroll to text display when focused
+  useEffect(() => {
+    if (textDisplayRef.current) {
+      textDisplayRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center',
+        inline: 'nearest'
+      });
+    }
+  }, [onFocus]);
+
   // Adjust current index for the visible window
   const adjustedCurrentIndex = currentIndex - visibleText.startIndex;
 
@@ -53,13 +66,29 @@ export function TextDisplay({ characterStates, currentIndex, onFocus, isActive, 
     return "Start typing to begin the test";
   };
 
+  const handleClick = () => {
+    if (!isActive && !isCompleted) {
+      onFocus();
+      // Scroll to this element when clicked
+      if (textDisplayRef.current) {
+        textDisplayRef.current.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest'
+        });
+      }
+    }
+  };
+
   return (
     <motion.div
+      ref={textDisplayRef}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="glass-card p-6 md:p-8 mb-6 cursor-text text-display overflow-hidden"
-      onClick={!isActive && !isCompleted ? onFocus : undefined}
+      className="glass-card p-6 md:p-8 mb-6 cursor-text text-display overflow-hidden scroll-mt-20"
+      onClick={handleClick}
+      id="text-display-area" // Add ID for targeting
     >
       {/* Progress indicator */}
       <div className="flex items-center justify-between mb-4 text-sm text-gray-400">

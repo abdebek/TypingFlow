@@ -31,6 +31,20 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
     { id: 'premium', label: 'Upgrade to Premium', icon: Crown },
   ];
 
+  const scrollToTextInput = () => {
+    // Scroll to text display area
+    setTimeout(() => {
+      const textDisplay = document.getElementById('text-display-area');
+      if (textDisplay) {
+        textDisplay.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest'
+        });
+      }
+    }, 300);
+  };
+
   const handleNavClick = (viewId: string) => {
     // Check if premium feature requires authentication
     const isPremiumFeature = premiumItems.some(item => item.id === viewId);
@@ -43,14 +57,9 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
     onViewChange(viewId);
     setIsMobileMenuOpen(false);
 
-    // Auto-focus input when navigating to test view
+    // Auto-scroll to text input when navigating to test view
     if (viewId === 'test') {
-      setTimeout(() => {
-        const inputElement = document.querySelector('input[type="text"]') as HTMLInputElement;
-        if (inputElement) {
-          inputElement.focus();
-        }
-      }, 300);
+      scrollToTextInput();
     }
   };
 

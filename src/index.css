@@ -14,6 +14,7 @@
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: rgba(75, 85, 99, 0.4) transparent;
+    scroll-behavior: smooth; /* Add smooth scrolling */
   }
   
   body {
@@ -30,6 +31,7 @@
     overflow-x: hidden;
     overflow-y: auto; /* Only root should scroll */
     position: relative;
+    scroll-behavior: smooth; /* Add smooth scrolling to root */
   }
   
   /* Custom scrollbar - only for root */
@@ -90,6 +92,11 @@
       scrollbar-width: none;
     }
   }
+
+  /* Smooth scroll offset for anchored elements */
+  .scroll-mt-20 {
+    scroll-margin-top: 5rem;
+  }
 }
 
 @layer components {
@@ -136,10 +143,16 @@
   .overflow-safe {
     max-width: 100%;
   }
+
+  /* Smooth focus transitions */
+  .focus-target {
+    scroll-margin-top: 6rem;
+    transition: all 0.3s ease-in-out;
+  }
 }
 
 /* Ensure containers don't create scroll contexts */
-.container, .max-w-7xl {
+.container, .max-w-7xl, .max-w-9xl {
   max-width: min(100vw, theme('maxWidth.7xl'));
 }
 
@@ -151,4 +164,9 @@
 /* Ensure specific components don't scroll */
 .glass-card, .space-y-6, .space-y-4, .grid {
   overflow: visible !important;
+}
+
+/* Smooth scroll behavior for all elements */
+* {
+  scroll-behavior: smooth;
 }
