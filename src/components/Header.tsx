@@ -32,7 +32,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
     <motion.header 
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="glass-card p-4 md:p-6 mb-6 md:mb-8"
+      className="glass-card p-4 md:p-6 mb-6 md:mb-8 relative"
     >
       <div className="flex items-center justify-between">
         {/* Logo */}
@@ -56,9 +56,28 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
             <p className="text-xs md:text-sm text-gray-400">Modern Typing Experience</p>
           </div>
         </div>
+
+        {/* Bolt.new Badge - Desktop */}
+        <div className="hidden lg:block absolute top-4 right-4">
+          <motion.a
+            href="https://bolt.new"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="block"
+            title="Built with Bolt.new"
+          >
+            <img
+              src="/black_circle_360x360.png"
+              alt="Built with Bolt.new"
+              className="w-8 h-8 md:w-10 md:h-10 opacity-80 hover:opacity-100 transition-opacity duration-200"
+            />
+          </motion.a>
+        </div>
         
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-1">
+        <nav className="hidden lg:flex items-center space-x-1 mr-16">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentView === item.id;
@@ -113,7 +132,24 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
         </nav>
 
         {/* Mobile Navigation Toggle */}
-        <div className="lg:hidden">
+        <div className="lg:hidden flex items-center space-x-3">
+          {/* Bolt.new Badge - Mobile */}
+          <motion.a
+            href="https://bolt.new"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="block"
+            title="Built with Bolt.new"
+          >
+            <img
+              src="/black_circle_360x360.png"
+              alt="Built with Bolt.new"
+              className="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity duration-200"
+            />
+          </motion.a>
+
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
