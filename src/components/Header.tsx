@@ -16,7 +16,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const { user, loading, isPremium } = useAuth();
 
-  // Core navigation items - all aligned consistently
+  // Simplified core navigation items
   const navItems = [
     { id: 'test', label: 'Test', icon: Keyboard },
     { id: 'stats', label: 'Stats', icon: BarChart3 },
@@ -24,7 +24,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
     { id: 'tutorial', label: 'Tutorial', icon: BookOpen },
   ];
 
-  // Premium features dropdown
+  // Premium features in dropdown
   const premiumItems = [
     { id: 'multiplayer', label: 'Multiplayer Racing', icon: Globe },
     { id: 'ai-coach', label: 'AI Coach', icon: Brain },
@@ -32,7 +32,6 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
   ];
 
   const scrollToTextInput = () => {
-    // Scroll to text display area
     setTimeout(() => {
       const textDisplay = document.getElementById('text-display-area');
       if (textDisplay) {
@@ -50,7 +49,6 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
   };
 
   const handleNavClick = (viewId: string) => {
-    // Check if premium feature requires authentication
     const isPremiumFeature = premiumItems.some(item => item.id === viewId);
     if (isPremiumFeature && !user) {
       setAuthMode('signup');
@@ -61,7 +59,6 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
     onViewChange(viewId);
     setIsMobileMenuOpen(false);
 
-    // Auto-scroll behavior based on view
     if (viewId === 'test') {
       scrollToTextInput();
     } else {
@@ -84,14 +81,14 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
 
   return (
     <>
-      {/* Full width header with background */}
+      {/* Full width header container */}
       <div className="w-full bg-dark-900/50 backdrop-blur-sm border-b border-dark-700/50 relative z-40">
-        <motion.header 
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="container mx-auto px-4 py-4 md:py-6 max-w-9xl"
-        >
-          <div className="flex items-center justify-between">
+        <div className="w-full max-w-none px-4 py-4 md:py-6">
+          <motion.header 
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="flex items-center justify-between w-full"
+          >
             {/* Logo */}
             <div className="flex items-center space-x-3">
               <motion.div
@@ -114,8 +111,8 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
               </div>
             </div>
 
-            {/* Desktop Navigation - All items aligned consistently */}
-            <nav className="hidden lg:flex items-center space-x-1">
+            {/* Desktop Navigation - Centered */}
+            <nav className="hidden lg:flex items-center justify-center flex-1 space-x-2">
               {/* Core Navigation Items */}
               {navItems.map((item) => {
                 const Icon = item.icon;
@@ -141,7 +138,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 );
               })}
 
-              {/* Premium Dropdown - Aligned with other nav items */}
+              {/* Premium Dropdown */}
               <div className="relative group">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -160,11 +157,9 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                   )}
                 </motion.button>
 
-                {/* Dropdown Menu with Localized Backdrop Blur */}
+                {/* Dropdown Menu */}
                 <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
-                  {/* Dropdown content with backdrop blur applied only to this element */}
-                  <div className="relative bg-dark-900/80 backdrop-blur-xl border border-gray-600/50 rounded-xl p-2 shadow-2xl shadow-dark-950/50">
-                    {/* Subtle gradient overlay for depth */}
+                  <div className="relative bg-dark-900/90 backdrop-blur-xl border border-gray-600/50 rounded-xl p-2 shadow-2xl">
                     <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-xl pointer-events-none" />
                     
                     <div className="relative z-10">
@@ -182,8 +177,8 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                             className={`
                               w-full flex items-center space-x-3 px-3 py-3 rounded-lg font-medium transition-all duration-200 text-left
                               ${isActive 
-                                ? 'bg-primary-600/90 text-white shadow-lg backdrop-blur-sm' 
-                                : 'text-gray-300 hover:text-white hover:bg-dark-800/80 hover:backdrop-blur-sm'
+                                ? 'bg-primary-600/90 text-white shadow-lg' 
+                                : 'text-gray-300 hover:text-white hover:bg-dark-800/80'
                               }
                               ${isLocked ? 'opacity-70' : ''}
                             `}
@@ -199,7 +194,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 </div>
               </div>
 
-              {/* Settings - Aligned with other nav items */}
+              {/* Settings */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -218,7 +213,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
             </nav>
 
             {/* Right Side - User & Built on Bolt */}
-            <div className="hidden lg:flex items-center space-x-6">
+            <div className="hidden lg:flex items-center space-x-4">
               {/* User Authentication */}
               {!loading && (
                 <div className="flex items-center space-x-3">
@@ -267,7 +262,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 </div>
               )}
 
-              {/* Built on Bolt Badge - Bigger and More Prominent */}
+              {/* Built on Bolt Badge */}
               <motion.a
                 href="https://bolt.new"
                 target="_blank"
@@ -280,7 +275,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 <img
                   src="/black_circle_360x360.png"
                   alt="Built on Bolt"
-                  className="w-8 h-8"
+                  className="w-6 h-6"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
@@ -306,7 +301,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 </motion.button>
               )}
 
-              {/* Built on Bolt Badge - Mobile (Bigger) */}
+              {/* Built on Bolt Badge - Mobile */}
               <motion.a
                 href="https://bolt.new"
                 target="_blank"
@@ -319,15 +314,12 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 <img
                   src="/black_circle_360x360.png"
                   alt="Built on Bolt"
-                  className="w-6 h-6"
+                  className="w-5 h-5"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
                 />
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium">Bolt</span>
-                  <span className="text-xs text-gray-400">Entry</span>
-                </div>
+                <span className="text-xs font-medium">Bolt</span>
               </motion.a>
 
               <motion.button
@@ -343,7 +335,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 )}
               </motion.button>
             </div>
-          </div>
+          </motion.header>
 
           {/* Mobile Navigation Menu */}
           <AnimatePresence>
@@ -493,7 +485,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
               </motion.div>
             )}
           </AnimatePresence>
-        </motion.header>
+        </div>
       </div>
 
       {/* Auth Modal */}
