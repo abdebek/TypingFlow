@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Keyboard, BarChart3, Settings, Trophy, BookOpen, Menu, X, FileText, Shield } from 'lucide-react';
+import { Keyboard, BarChart3, Settings, Trophy, BookOpen, Menu, X, FileText, Shield, Crown, Globe, Brain } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface HeaderProps {
@@ -14,7 +14,10 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
     { id: 'test', label: 'Test', icon: Keyboard },
     { id: 'stats', label: 'Statistics', icon: BarChart3 },
     { id: 'leaderboard', label: 'Challenges', icon: Trophy },
+    { id: 'multiplayer', label: 'Multiplayer', icon: Globe },
+    { id: 'ai-coach', label: 'AI Coach', icon: Brain },
     { id: 'tutorial', label: 'Tutorial', icon: BookOpen },
+    { id: 'premium', label: 'Premium', icon: Crown },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
@@ -81,6 +84,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentView === item.id;
+            const isPremium = item.id === 'premium' || item.id === 'multiplayer' || item.id === 'ai-coach';
             
             return (
               <motion.button
@@ -89,7 +93,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleNavClick(item.id)}
                 className={`
-                  flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
+                  flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 relative
                   ${isActive 
                     ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25' 
                     : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
@@ -98,6 +102,9 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
               >
                 <Icon className="w-4 h-4" />
                 <span className="text-sm">{item.label}</span>
+                {isPremium && (
+                  <Crown className="w-3 h-3 text-amber-400" />
+                )}
               </motion.button>
             );
           })}
@@ -180,6 +187,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
               {navItems.map((item, index) => {
                 const Icon = item.icon;
                 const isActive = currentView === item.id;
+                const isPremium = item.id === 'premium' || item.id === 'multiplayer' || item.id === 'ai-coach';
                 
                 return (
                   <motion.button
@@ -191,7 +199,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleNavClick(item.id)}
                     className={`
-                      flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 text-left
+                      flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 text-left relative
                       ${isActive 
                         ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25' 
                         : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
@@ -200,6 +208,9 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                   >
                     <Icon className="w-5 h-5" />
                     <span>{item.label}</span>
+                    {isPremium && (
+                      <Crown className="w-4 h-4 text-amber-400" />
+                    )}
                   </motion.button>
                 );
               })}

@@ -14,6 +14,10 @@ import { AdvancedMetrics } from './components/AdvancedMetrics';
 import { TypingHeatmap } from './components/TypingHeatmap';
 import { TypingChallenges } from './components/TypingChallenges';
 import { TypingTutorial } from './components/TypingTutorial';
+import { PremiumFeatures } from './components/PremiumFeatures';
+import { MultiplayerRacing } from './components/MultiplayerRacing';
+import { AICoach } from './components/AICoach';
+import { GlobalLeaderboard } from './components/GlobalLeaderboard';
 import { PrivacyPolicy } from './components/PrivacyPolicy';
 import { TermsOfService } from './components/TermsOfService';
 import { Footer } from './components/Footer';
@@ -149,6 +153,16 @@ function App() {
     setCurrentView('test');
     // Challenge-specific configuration would go here
     console.log('Starting challenge:', challengeId);
+  };
+
+  const handleUpgrade = () => {
+    // Handle premium upgrade
+    alert('Premium upgrade coming soon! This would integrate with payment processing.');
+  };
+
+  const handleStartRace = () => {
+    // Handle multiplayer race start
+    console.log('Starting multiplayer race...');
   };
 
   // Mock data for heatmap (in a real app, this would come from localStorage or API)
@@ -341,6 +355,45 @@ function App() {
               transition={{ duration: 0.3 }}
             >
               <TypingChallenges onStartChallenge={handleStartChallenge} />
+              <div className="mt-8">
+                <GlobalLeaderboard />
+              </div>
+            </motion.div>
+          )}
+
+          {currentView === 'multiplayer' && (
+            <motion.div
+              key="multiplayer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <MultiplayerRacing onStartRace={handleStartRace} />
+            </motion.div>
+          )}
+
+          {currentView === 'ai-coach' && (
+            <motion.div
+              key="ai-coach"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <AICoach />
+            </motion.div>
+          )}
+
+          {currentView === 'premium' && (
+            <motion.div
+              key="premium"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <PremiumFeatures onUpgrade={handleUpgrade} />
             </motion.div>
           )}
 
