@@ -286,7 +286,7 @@ function App() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="space-y-4 md:space-y-6"
+                className="space-y-3 md:space-y-4"
               >
                 {!isCompleted ? (
                   <>
@@ -330,8 +330,9 @@ function App() {
                       </motion.div>
                     )}
 
-                    {/* Stats and WPM Graph - Better layout for wider screens */}
-                    <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 md:gap-6">
+                    {/* Optimized layout for typing interface */}
+                    <div className="grid grid-cols-1 xl:grid-cols-5 gap-3 md:gap-4">
+                      {/* Stats - takes more space */}
                       <div className="xl:col-span-3">
                         <StatsDisplay 
                           stats={stats} 
@@ -340,12 +341,29 @@ function App() {
                           isActive={isActive && !isPaused} 
                         />
                       </div>
-                      <div className="xl:col-span-1">
+                      {/* WPM Graph - compact */}
+                      <div className="xl:col-span-2">
                         <WPMGraph data={wpmHistory} currentWPM={stats.wpm} />
                       </div>
                     </div>
 
-                    {/* Advanced Metrics Toggle */}
+                    {/* Text Display - single line, prominent */}
+                    <TextDisplay
+                      characterStates={characterStates}
+                      currentIndex={currentIndex}
+                      onFocus={focusInput}
+                      isActive={isActive}
+                      isCompleted={isCompleted}
+                    />
+                    
+                    {/* Virtual Keyboard - compact, directly below text */}
+                    <VirtualKeyboard
+                      pressedKeys={pressedKeys}
+                      lastPressedKey={lastPressedKey}
+                      keyAccuracy={keyAccuracy}
+                    />
+
+                    {/* Advanced Metrics Toggle - moved to bottom */}
                     <div className="flex justify-center">
                       <motion.button
                         whileHover={{ scale: 1.05 }}
@@ -357,24 +375,8 @@ function App() {
                       </motion.button>
                     </div>
 
-                    {/* Advanced Metrics */}
+                    {/* Advanced Metrics - collapsible */}
                     <AdvancedMetrics stats={metrics} isVisible={showAdvancedMetrics} />
-                    
-                    {/* Text Display */}
-                    <TextDisplay
-                      characterStates={characterStates}
-                      currentIndex={currentIndex}
-                      onFocus={focusInput}
-                      isActive={isActive}
-                      isCompleted={isCompleted}
-                    />
-                    
-                    {/* Virtual Keyboard directly below text */}
-                    <VirtualKeyboard
-                      pressedKeys={pressedKeys}
-                      lastPressedKey={lastPressedKey}
-                      keyAccuracy={keyAccuracy}
-                    />
 
                     {/* Streak Display */}
                     {correctStreak > 5 && (

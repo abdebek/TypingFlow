@@ -54,15 +54,15 @@ export function StatsDisplay({ stats, config, elapsedTime, isActive }: StatsDisp
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="glass-card p-4 md:p-6"
+      className="glass-card p-3 md:p-4"
     >
-      {/* Progress Bar */}
-      <div className="mb-4 md:mb-6">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-gray-400">Progress</span>
-          <span className="text-sm text-gray-400">{Math.round(progress)}%</span>
+      {/* Compact Progress Bar */}
+      <div className="mb-3 md:mb-4">
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-xs text-gray-400">Progress</span>
+          <span className="text-xs text-gray-400">{Math.round(progress)}%</span>
         </div>
-        <div className="w-full bg-dark-800 rounded-full h-2 overflow-hidden">
+        <div className="w-full bg-dark-800 rounded-full h-1.5 overflow-hidden">
           <motion.div
             className="h-full bg-gradient-to-r from-primary-500 to-success-500"
             initial={{ width: 0 }}
@@ -72,8 +72,8 @@ export function StatsDisplay({ stats, config, elapsedTime, isActive }: StatsDisp
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+      {/* Compact Stats Grid */}
+      <div className="grid grid-cols-4 gap-2 md:gap-3">
         {statItems.map((item, index) => {
           const Icon = item.icon;
           return (
@@ -82,12 +82,12 @@ export function StatsDisplay({ stats, config, elapsedTime, isActive }: StatsDisp
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.1 + index * 0.05 }}
-              className={`${item.bgColor} rounded-xl p-3 md:p-4 text-center border border-gray-700/30`}
+              className={`${item.bgColor} rounded-lg p-2 md:p-3 text-center border border-gray-700/30`}
             >
-              <div className="flex items-center justify-center mb-2">
-                <Icon className={`w-4 h-4 md:w-5 md:h-5 ${item.color}`} />
+              <div className="flex items-center justify-center mb-1">
+                <Icon className={`w-3 h-3 md:w-4 md:h-4 ${item.color}`} />
               </div>
-              <div className={`text-xl md:text-2xl font-bold ${item.color} mb-1`}>
+              <div className={`text-sm md:text-lg font-bold ${item.color} mb-0.5`}>
                 <motion.span
                   key={item.value}
                   initial={{ scale: 1.2, opacity: 0 }}
@@ -105,10 +105,10 @@ export function StatsDisplay({ stats, config, elapsedTime, isActive }: StatsDisp
         })}
       </div>
 
-      {/* Test Configuration */}
-      <div className="mt-4 pt-4 border-t border-gray-700/30">
-        <div className="flex flex-wrap items-center justify-center gap-2 md:gap-6 text-sm text-gray-400">
-          <span>Mode: {config.mode === 'time' ? 'Timed' : 'Words'}</span>
+      {/* Compact Test Configuration */}
+      <div className="mt-3 pt-3 border-t border-gray-700/30">
+        <div className="flex flex-wrap items-center justify-center gap-1 md:gap-4 text-xs text-gray-400">
+          <span>{config.mode === 'time' ? 'Timed' : 'Words'}</span>
           <span className="hidden md:inline">•</span>
           <span>
             {config.mode === 'time' 

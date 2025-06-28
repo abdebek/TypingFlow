@@ -9,78 +9,62 @@ interface VirtualKeyboardProps {
 
 export function VirtualKeyboard({ pressedKeys, lastPressedKey, keyAccuracy }: VirtualKeyboardProps) {
   const keyboardLayout = [
-    // Number row
+    // Top row (numbers) - simplified
     [
-      { key: '`', width: 'w-8 md:w-10' },
-      { key: '1', width: 'w-8 md:w-10' },
-      { key: '2', width: 'w-8 md:w-10' },
-      { key: '3', width: 'w-8 md:w-10' },
-      { key: '4', width: 'w-8 md:w-10' },
-      { key: '5', width: 'w-8 md:w-10' },
-      { key: '6', width: 'w-8 md:w-10' },
-      { key: '7', width: 'w-8 md:w-10' },
-      { key: '8', width: 'w-8 md:w-10' },
-      { key: '9', width: 'w-8 md:w-10' },
-      { key: '0', width: 'w-8 md:w-10' },
-      { key: '-', width: 'w-8 md:w-10' },
-      { key: '=', width: 'w-8 md:w-10' },
-      { key: 'Backspace', width: 'w-16 md:w-20', label: '⌫' }
+      { key: '1', width: 'w-6 md:w-8' },
+      { key: '2', width: 'w-6 md:w-8' },
+      { key: '3', width: 'w-6 md:w-8' },
+      { key: '4', width: 'w-6 md:w-8' },
+      { key: '5', width: 'w-6 md:w-8' },
+      { key: '6', width: 'w-6 md:w-8' },
+      { key: '7', width: 'w-6 md:w-8' },
+      { key: '8', width: 'w-6 md:w-8' },
+      { key: '9', width: 'w-6 md:w-8' },
+      { key: '0', width: 'w-6 md:w-8' },
+      { key: 'Backspace', width: 'w-12 md:w-16', label: '⌫' }
     ],
-    // Top row
+    // Top letter row
     [
-      { key: 'Tab', width: 'w-12 md:w-16', label: '⇥' },
-      { key: 'q', width: 'w-8 md:w-10' },
-      { key: 'w', width: 'w-8 md:w-10' },
-      { key: 'e', width: 'w-8 md:w-10' },
-      { key: 'r', width: 'w-8 md:w-10' },
-      { key: 't', width: 'w-8 md:w-10' },
-      { key: 'y', width: 'w-8 md:w-10' },
-      { key: 'u', width: 'w-8 md:w-10' },
-      { key: 'i', width: 'w-8 md:w-10' },
-      { key: 'o', width: 'w-8 md:w-10' },
-      { key: 'p', width: 'w-8 md:w-10' },
-      { key: '[', width: 'w-8 md:w-10' },
-      { key: ']', width: 'w-8 md:w-10' },
-      { key: '\\', width: 'w-12 md:w-16' }
+      { key: 'q', width: 'w-6 md:w-8' },
+      { key: 'w', width: 'w-6 md:w-8' },
+      { key: 'e', width: 'w-6 md:w-8' },
+      { key: 'r', width: 'w-6 md:w-8' },
+      { key: 't', width: 'w-6 md:w-8' },
+      { key: 'y', width: 'w-6 md:w-8' },
+      { key: 'u', width: 'w-6 md:w-8' },
+      { key: 'i', width: 'w-6 md:w-8' },
+      { key: 'o', width: 'w-6 md:w-8' },
+      { key: 'p', width: 'w-6 md:w-8' }
     ],
     // Home row
     [
-      { key: 'CapsLock', width: 'w-14 md:w-20', label: '⇪' },
-      { key: 'a', width: 'w-8 md:w-10' },
-      { key: 's', width: 'w-8 md:w-10' },
-      { key: 'd', width: 'w-8 md:w-10' },
-      { key: 'f', width: 'w-8 md:w-10' },
-      { key: 'g', width: 'w-8 md:w-10' },
-      { key: 'h', width: 'w-8 md:w-10' },
-      { key: 'j', width: 'w-8 md:w-10' },
-      { key: 'k', width: 'w-8 md:w-10' },
-      { key: 'l', width: 'w-8 md:w-10' },
-      { key: ';', width: 'w-8 md:w-10' },
-      { key: "'", width: 'w-8 md:w-10' },
-      { key: 'Enter', width: 'w-16 md:w-20', label: '⏎' }
+      { key: 'a', width: 'w-6 md:w-8' },
+      { key: 's', width: 'w-6 md:w-8' },
+      { key: 'd', width: 'w-6 md:w-8' },
+      { key: 'f', width: 'w-6 md:w-8' },
+      { key: 'g', width: 'w-6 md:w-8' },
+      { key: 'h', width: 'w-6 md:w-8' },
+      { key: 'j', width: 'w-6 md:w-8' },
+      { key: 'k', width: 'w-6 md:w-8' },
+      { key: 'l', width: 'w-6 md:w-8' },
+      { key: 'Enter', width: 'w-12 md:w-16', label: '⏎' }
     ],
     // Bottom row
     [
-      { key: 'Shift', width: 'w-18 md:w-24', label: '⇧' },
-      { key: 'z', width: 'w-8 md:w-10' },
-      { key: 'x', width: 'w-8 md:w-10' },
-      { key: 'c', width: 'w-8 md:w-10' },
-      { key: 'v', width: 'w-8 md:w-10' },
-      { key: 'b', width: 'w-8 md:w-10' },
-      { key: 'n', width: 'w-8 md:w-10' },
-      { key: 'm', width: 'w-8 md:w-10' },
-      { key: ',', width: 'w-8 md:w-10' },
-      { key: '.', width: 'w-8 md:w-10' },
-      { key: '/', width: 'w-8 md:w-10' },
-      { key: 'Shift', width: 'w-20 md:w-28', label: '⇧' }
+      { key: 'z', width: 'w-6 md:w-8' },
+      { key: 'x', width: 'w-6 md:w-8' },
+      { key: 'c', width: 'w-6 md:w-8' },
+      { key: 'v', width: 'w-6 md:w-8' },
+      { key: 'b', width: 'w-6 md:w-8' },
+      { key: 'n', width: 'w-6 md:w-8' },
+      { key: 'm', width: 'w-6 md:w-8' },
+      { key: ',', width: 'w-6 md:w-8' },
+      { key: '.', width: 'w-6 md:w-8' },
+      { key: '/', width: 'w-6 md:w-8' }
     ],
     // Space row
     [
-      { key: 'Ctrl', width: 'w-12 md:w-16', label: 'Ctrl' },
-      { key: 'Alt', width: 'w-12 md:w-16', label: 'Alt' },
-      { key: ' ', width: 'w-32 md:w-80', label: 'Space' },
-      { key: 'Alt', width: 'w-12 md:w-16', label: 'Alt' },
-      { key: 'Ctrl', width: 'w-12 md:w-16', label: 'Ctrl' }
+      { key: ' ', width: 'w-32 md:w-64', label: 'Space' }
     ]
   ];
 
@@ -129,41 +113,34 @@ export function VirtualKeyboard({ pressedKeys, lastPressedKey, keyAccuracy }: Vi
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="glass-card p-4 md:p-6 overflow-hidden"
+      className="glass-card p-3 md:p-4 overflow-hidden"
     >
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 md:mb-6 space-y-3 md:space-y-0">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-200 mb-1">Virtual Keyboard</h3>
-          <p className="text-sm text-gray-400">Real-time key tracking and accuracy visualization</p>
-        </div>
+      {/* Compact Header */}
+      <div className="flex items-center justify-between mb-3 md:mb-4">
+        <h3 className="text-sm font-semibold text-gray-200">Virtual Keyboard</h3>
         
-        {/* Legend */}
-        <div className="grid grid-cols-2 md:flex md:items-center md:space-x-4 gap-2 text-xs">
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-success-500/20 border border-success-500/40 rounded"></div>
-            <span className="text-gray-400">Excellent (95%+)</span>
+        {/* Compact Legend */}
+        <div className="flex items-center space-x-2 text-xs">
+          <div className="flex items-center space-x-1">
+            <div className="w-2 h-2 bg-success-500/20 border border-success-500/40 rounded"></div>
+            <span className="text-gray-400">95%+</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-amber-500/20 border border-amber-500/40 rounded"></div>
-            <span className="text-gray-400">Good (85-94%)</span>
+          <div className="flex items-center space-x-1">
+            <div className="w-2 h-2 bg-amber-500/20 border border-amber-500/40 rounded"></div>
+            <span className="text-gray-400">85%+</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-orange-500/20 border border-orange-500/40 rounded"></div>
-            <span className="text-gray-400">Fair (70-84%)</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-error-500/20 border border-error-500/40 rounded"></div>
-            <span className="text-gray-400">{'Needs Work (<70%)'}</span>
+          <div className="flex items-center space-x-1">
+            <div className="w-2 h-2 bg-error-500/20 border border-error-500/40 rounded"></div>
+            <span className="text-gray-400">{'<70%'}</span>
           </div>
         </div>
       </div>
       
-      {/* Keyboard Layout */}
-      <div className="space-y-1 md:space-y-2 select-none overflow-x-auto">
+      {/* Compact Keyboard Layout */}
+      <div className="space-y-1 select-none overflow-x-auto">
         <div className="min-w-max">
           {keyboardLayout.map((row, rowIndex) => (
-            <div key={rowIndex} className="flex justify-center space-x-0.5 md:space-x-1 mb-1 md:mb-2">
+            <div key={rowIndex} className="flex justify-center space-x-0.5 mb-1">
               {row.map((keyObj, keyIndex) => {
                 const accuracy = getKeyAccuracy(keyObj.key);
                 const keyColor = getKeyColor(keyObj.key, accuracy);
@@ -175,8 +152,8 @@ export function VirtualKeyboard({ pressedKeys, lastPressedKey, keyAccuracy }: Vi
                   <motion.div
                     key={`${rowIndex}-${keyIndex}-${keyObj.key}`}
                     className={`
-                      ${keyObj.width} h-8 md:h-10 ${keyColor} rounded border-2 flex items-center justify-center
-                      text-xs md:text-sm font-semibold transition-all duration-150 relative overflow-hidden
+                      ${keyObj.width} h-6 md:h-8 ${keyColor} rounded border-2 flex items-center justify-center
+                      text-xs font-semibold transition-all duration-150 relative overflow-hidden
                       cursor-default group
                     `}
                     animate={{
@@ -201,10 +178,10 @@ export function VirtualKeyboard({ pressedKeys, lastPressedKey, keyAccuracy }: Vi
                       {getKeyLabel(keyObj)}
                     </span>
                     
-                    {/* Accuracy indicator for letter keys */}
+                    {/* Accuracy indicator for letter keys - smaller */}
                     {isLetterKey && keyAccuracy[keyObj.key.toLowerCase()]?.total > 0 && (
                       <motion.div 
-                        className="absolute bottom-0.5 right-0.5 text-xs font-bold opacity-80"
+                        className="absolute bottom-0 right-0 text-xs font-bold opacity-80"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.2 }}
@@ -213,14 +190,7 @@ export function VirtualKeyboard({ pressedKeys, lastPressedKey, keyAccuracy }: Vi
                       </motion.div>
                     )}
                     
-                    {/* Hover tooltip for detailed stats */}
-                    {isLetterKey && keyAccuracy[keyObj.key.toLowerCase()]?.total > 0 && (
-                      <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-dark-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20 whitespace-nowrap">
-                        {keyAccuracy[keyObj.key.toLowerCase()].correct}/{keyAccuracy[keyObj.key.toLowerCase()].total} correct
-                      </div>
-                    )}
-                    
-                    {/* Special key indicator */}
+                    {/* Home row indicators */}
                     {['f', 'j'].includes(keyObj.key.toLowerCase()) && (
                       <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-gray-400 rounded-full"></div>
                     )}
@@ -232,29 +202,29 @@ export function VirtualKeyboard({ pressedKeys, lastPressedKey, keyAccuracy }: Vi
         </div>
       </div>
       
-      {/* Typing stats summary */}
-      <div className="mt-4 md:mt-6 pt-4 border-t border-gray-700/30">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 text-center">
-          <div className="bg-dark-800/50 rounded-lg p-2 md:p-3">
-            <div className="text-base md:text-lg font-bold text-primary-400">
+      {/* Compact typing stats summary */}
+      <div className="mt-3 pt-3 border-t border-gray-700/30">
+        <div className="grid grid-cols-4 gap-2 text-center">
+          <div className="bg-dark-800/50 rounded-lg p-1.5">
+            <div className="text-sm font-bold text-primary-400">
               {Object.keys(keyAccuracy).length}
             </div>
-            <div className="text-xs text-gray-400">Keys Used</div>
+            <div className="text-xs text-gray-400">Keys</div>
           </div>
-          <div className="bg-dark-800/50 rounded-lg p-2 md:p-3">
-            <div className="text-base md:text-lg font-bold text-success-400">
+          <div className="bg-dark-800/50 rounded-lg p-1.5">
+            <div className="text-sm font-bold text-success-400">
               {Object.values(keyAccuracy).reduce((sum, acc) => sum + acc.correct, 0)}
             </div>
-            <div className="text-xs text-gray-400">Correct Presses</div>
+            <div className="text-xs text-gray-400">Correct</div>
           </div>
-          <div className="bg-dark-800/50 rounded-lg p-2 md:p-3">
-            <div className="text-base md:text-lg font-bold text-error-400">
+          <div className="bg-dark-800/50 rounded-lg p-1.5">
+            <div className="text-sm font-bold text-error-400">
               {Object.values(keyAccuracy).reduce((sum, acc) => sum + (acc.total - acc.correct), 0)}
             </div>
-            <div className="text-xs text-gray-400">Incorrect Presses</div>
+            <div className="text-xs text-gray-400">Errors</div>
           </div>
-          <div className="bg-dark-800/50 rounded-lg p-2 md:p-3">
-            <div className="text-base md:text-lg font-bold text-amber-400">
+          <div className="bg-dark-800/50 rounded-lg p-1.5">
+            <div className="text-sm font-bold text-amber-400">
               {Object.values(keyAccuracy).length > 0 
                 ? Math.round(
                     Object.values(keyAccuracy).reduce((sum, acc) => sum + (acc.correct / acc.total), 0) / 
@@ -263,7 +233,7 @@ export function VirtualKeyboard({ pressedKeys, lastPressedKey, keyAccuracy }: Vi
                 : 100
               }%
             </div>
-            <div className="text-xs text-gray-400">Overall Accuracy</div>
+            <div className="text-xs text-gray-400">Accuracy</div>
           </div>
         </div>
       </div>
