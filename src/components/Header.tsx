@@ -132,34 +132,44 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 )}
               </motion.button>
 
-              {/* Dropdown Menu - Fixed z-index */}
+              {/* Dropdown Menu with Enhanced Backdrop Blur */}
               <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
-                <div className="glass-card p-2 border border-gray-600/50 shadow-2xl backdrop-blur-md">
-                  {premiumItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = currentView === item.id;
-                    const isLocked = !isPremium && item.id !== 'premium';
-                    
-                    return (
-                      <motion.button
-                        key={item.id}
-                        whileHover={{ scale: 1.02 }}
-                        onClick={() => handleNavClick(item.id)}
-                        className={`
-                          w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium transition-all duration-200 text-left
-                          ${isActive 
-                            ? 'bg-primary-600 text-white' 
-                            : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
-                          }
-                          ${isLocked ? 'opacity-60' : ''}
-                        `}
-                      >
-                        <Icon className="w-4 h-4" />
-                        <span className="text-sm">{item.label}</span>
-                        {isLocked && <Crown className="w-3 h-3 text-amber-400 ml-auto" />}
-                      </motion.button>
-                    );
-                  })}
+                {/* Backdrop blur overlay */}
+                <div className="fixed inset-0 bg-dark-950/20 backdrop-blur-sm -z-10" />
+                
+                {/* Dropdown content */}
+                <div className="relative bg-dark-900/95 backdrop-blur-xl border border-gray-600/50 rounded-xl p-2 shadow-2xl shadow-dark-950/50">
+                  {/* Subtle gradient overlay for depth */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-xl pointer-events-none" />
+                  
+                  <div className="relative z-10">
+                    {premiumItems.map((item) => {
+                      const Icon = item.icon;
+                      const isActive = currentView === item.id;
+                      const isLocked = !isPremium && item.id !== 'premium';
+                      
+                      return (
+                        <motion.button
+                          key={item.id}
+                          whileHover={{ scale: 1.02, x: 4 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => handleNavClick(item.id)}
+                          className={`
+                            w-full flex items-center space-x-3 px-3 py-3 rounded-lg font-medium transition-all duration-200 text-left
+                            ${isActive 
+                              ? 'bg-primary-600/90 text-white shadow-lg backdrop-blur-sm' 
+                              : 'text-gray-300 hover:text-white hover:bg-dark-800/80 hover:backdrop-blur-sm'
+                            }
+                            ${isLocked ? 'opacity-70' : ''}
+                          `}
+                        >
+                          <Icon className="w-4 h-4" />
+                          <span className="text-sm">{item.label}</span>
+                          {isLocked && <Crown className="w-3 h-3 text-amber-400 ml-auto" />}
+                        </motion.button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
