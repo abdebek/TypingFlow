@@ -32,6 +32,7 @@ import { useKeyboardTracking } from './hooks/useKeyboardTracking';
 import { useWPMTracking } from './hooks/useWPMTracking';
 import { useAdvancedMetrics } from './hooks/useAdvancedMetrics';
 import { usePerformanceMonitoring } from './hooks/usePerformanceMonitoring';
+import { useAuth } from './hooks/useAuth';
 import { getRandomText, generateCustomText, getTextForDuration } from './data/texts';
 import { TestConfig } from './types';
 
@@ -53,6 +54,7 @@ function App() {
 
   const { notifications, addNotification, removeNotification, clearAllNotifications } = useNotifications();
   const { trackTypingPerformance, trackError } = usePerformanceMonitoring();
+  const { user, isAuthenticated } = useAuth();
 
   const {
     stats,
@@ -468,7 +470,7 @@ function App() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
               >
-                <AICoach />
+                <AICoach isAuthenticated={isAuthenticated} user={user} />
               </motion.div>
             )}
 

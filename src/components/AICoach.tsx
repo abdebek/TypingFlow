@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Brain, Target, TrendingUp, Lightbulb, MessageCircle, Zap, BarChart3, Clock, Settings } from 'lucide-react';
+import { Brain, Target, TrendingUp, Lightbulb, MessageCircle, Zap, BarChart3, Clock, Settings, LogIn, AlertCircle } from 'lucide-react';
 import { analyzeTypingPatterns, getPerformanceInsights, getCacheStats, clearAICache, getChatResponse, AI_PROVIDERS } from '../lib/ai';
 import { LoadingSpinner } from './LoadingSpinner';
 
@@ -11,7 +11,12 @@ interface AIInsight {
   action?: string;
 }
 
-export function AICoach() {
+interface AICoachProps {
+  isAuthenticated: boolean;
+  user?: any;
+}
+
+export function AICoach({ isAuthenticated, user }: AICoachProps) {
   const [insights, setInsights] = useState<AIInsight[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [cacheStats, setCacheStats] = useState<any>(null);
@@ -24,14 +29,30 @@ export function AICoach() {
   ]);
   const [preferredProvider, setPreferredProvider] = useState<string>('auto');
   const [showProviderSettings, setShowProviderSettings] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadAIAnalysis();
-    loadCacheStats();
-  }, []);
+    if (isAuthenticated) {
+      loadAIAnalysis();
+      loadCacheStats();
+      setAuthError(null);
+    } else {
+      // Clear data when not authenticated
+      setInsights([]);
+      setCacheStats(null);
+      setAuthError('Please sign in to access AI coaching features');
+    }
+  }, [isAuthenticated, preferredProvider]);
 
   const loadAIAnalysis = async () => {
+    if (!isAuthenticated) {
+      setAuthError('Authentication required for AI analysis');
+      return;
+    }
+
     setIsAnalyzing(true);
+    setAuthError(null);
+    
     try {
       // Get typing history from localStorage
       const typingHistory = JSON.parse(localStorage.getItem('typingResults') || '[]');
@@ -79,32 +100,44 @@ export function AICoach() {
           }
         ]);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('AI analysis failed:', error);
-      setInsights([
-        {
-          type: 'suggestion',
-          title: 'Analysis Unavailable',
-          description: 'Unable to generate AI insights at the moment. Please try again later.',
-        }
-      ]);
+      
+      // Handle specific authentication errors
+      if (error.message?.includes('Not authenticated') || error.message?.includes('authentication')) {
+        setAuthError('Your session has expired. Please sign in again to access AI features.');
+        setInsights([]);
+      } else {
+        setInsights([
+          {
+            type: 'suggestion',
+            title: 'Analysis Unavailable',
+            description: 'Unable to generate AI insights at the moment. Please try again later.',
+          }
+        ]);
+      }
     } finally {
       setIsAnalyzing(false);
     }
   };
 
   const loadCacheStats = async () => {
+    if (!isAuthenticated) return;
+    
     try {
       const stats = await getCacheStats();
       setCacheStats(stats);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to load cache stats:', error);
+      if (error.message?.includes('Not authenticated')) {
+        setAuthError('Authentication required to view cache statistics');
+      }
     }
   };
 
   const handleChatSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!chatMessage.trim()) return;
+    if (!chatMessage.trim() || !isAuthenticated) return;
 
     const userMessage = chatMessage.trim();
     setChatMessage('');
@@ -124,20 +157,32 @@ export function AICoach() {
         provider: preferredProvider,
         cost: 0.001 // Estimated cost
       }]);
-    } catch (error) {
+    } catch (error: any) {
+      let errorMessage = "I'm having trouble processing your request right now. Please try again later!";
+      
+      if (error.message?.includes('Not authenticated')) {
+        errorMessage = "Your session has expired. Please sign in again to continue our conversation.";
+        setAuthError('Session expired - please sign in again');
+      }
+      
       setChatHistory(prev => [...prev, { 
         role: 'ai', 
-        message: "I'm having trouble processing your request right now. Please try again later!" 
+        message: errorMessage
       }]);
     }
   };
 
   const handleClearCache = async () => {
+    if (!isAuthenticated) return;
+    
     try {
       await clearAICache();
       await loadCacheStats();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to clear cache:', error);
+      if (error.message?.includes('Not authenticated')) {
+        setAuthError('Authentication required to clear cache');
+      }
     }
   };
 
@@ -161,6 +206,36 @@ export function AICoach() {
     }
   };
 
+  // Authentication required message
+  if (!isAuthenticated) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-6"
+      >
+        <div className="glass-card p-8 text-center">
+          <div className="flex items-center justify-center mb-4">
+            <div className="p-4 bg-primary-600/20 rounded-full">
+              <LogIn className="w-8 h-8 text-primary-400" />
+            </div>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-200 mb-4">Sign In Required</h2>
+          <p className="text-gray-400 mb-6">
+            Access personalized AI coaching insights, chat with your AI coach, and track your progress by signing in to your account.
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-all duration-200"
+          >
+            Sign In to Continue
+          </motion.button>
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -173,6 +248,11 @@ export function AICoach() {
           <div className="flex items-center space-x-3">
             <Brain className="w-6 h-6 text-primary-400" />
             <h2 className="text-2xl font-bold text-gray-200">AI Typing Coach</h2>
+            {user && (
+              <span className="text-sm text-gray-400">
+                Welcome back, {user.email}!
+              </span>
+            )}
           </div>
           
           {/* Controls */}
@@ -211,6 +291,21 @@ export function AICoach() {
             )}
           </div>
         </div>
+
+        {/* Authentication Error Alert */}
+        {authError && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            className="mb-4 p-4 bg-red-600/10 border border-red-600/30 rounded-lg flex items-center space-x-3"
+          >
+            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+            <div>
+              <p className="text-red-400 font-medium">Authentication Error</p>
+              <p className="text-red-300 text-sm">{authError}</p>
+            </div>
+          </motion.div>
+        )}
 
         {/* Provider Settings Panel */}
         {showProviderSettings && (
@@ -283,7 +378,7 @@ export function AICoach() {
       )}
 
       {/* AI Insights */}
-      {!isAnalyzing && insights.length > 0 && (
+      {!isAnalyzing && insights.length > 0 && !authError && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-200">Personalized Insights</h3>
@@ -393,14 +488,15 @@ export function AICoach() {
               type="text"
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
-              placeholder="Ask me anything about improving your typing..."
-              className="flex-1 px-4 py-3 bg-dark-800 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder={authError ? "Sign in to chat with your AI coach..." : "Ask me anything about improving your typing..."}
+              disabled={!!authError}
+              className="flex-1 px-4 py-3 bg-dark-800 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               type="submit"
-              disabled={!chatMessage.trim()}
+              disabled={!chatMessage.trim() || !!authError}
               className="px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Send
