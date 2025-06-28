@@ -88,7 +88,40 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
             </div>
           </div>
 
-          {/* User Section & Built on Bolt Badge */}
+          {/* Desktop Navigation - Centered */}
+          <nav className="hidden lg:flex items-center space-x-1 absolute left-1/2 transform -translate-x-1/2">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentView === item.id;
+              const isPremiumFeature = item.premium;
+              const isLocked = isPremiumFeature && !isPremium && user;
+              
+              return (
+                <motion.button
+                  key={item.id}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleNavClick(item.id)}
+                  className={`
+                    flex items-center space-x-2 px-3 py-2 rounded-lg font-medium transition-all duration-200 relative
+                    ${isActive 
+                      ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25' 
+                      : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
+                    }
+                    ${isLocked ? 'opacity-60' : ''}
+                  `}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="text-sm">{item.label}</span>
+                  {isPremiumFeature && (
+                    <Crown className="w-3 h-3 text-amber-400" />
+                  )}
+                </motion.button>
+              );
+            })}
+          </nav>
+
+          {/* Right Side - User & Built on Bolt */}
           <div className="hidden lg:flex items-center space-x-4">
             {/* User Authentication */}
             {!loading && (
@@ -103,7 +136,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                     )}
                     <div className="flex items-center space-x-2 bg-dark-800/50 rounded-lg px-3 py-2">
                       <User className="w-4 h-4 text-gray-400" />
-                      <span className="text-gray-300 text-sm">{user.email}</span>
+                      <span className="text-gray-300 text-sm max-w-32 truncate">{user.email}</span>
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -138,89 +171,54 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
               </div>
             )}
 
-            {/* Built on Bolt Badge - REQUIRED FOR HACKATHON */}
+            {/* Built on Bolt Badge */}
             <motion.a
               href="https://bolt.new"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+              className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-2 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200"
               title="Built with Bolt.new - World's Largest Hackathon Entry"
             >
               <img
                 src="/black_circle_360x360.png"
                 alt="Built on Bolt"
-                className="w-5 h-5"
+                className="w-4 h-4"
                 onError={(e) => {
-                  // Fallback if image doesn't load
                   e.currentTarget.style.display = 'none';
                 }}
               />
               <span className="text-sm font-semibold">Built on Bolt</span>
             </motion.a>
-          </div>
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1 mr-32">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = currentView === item.id;
-              const isPremiumFeature = item.premium;
-              const isLocked = isPremiumFeature && !isPremium && user;
-              
-              return (
-                <motion.button
-                  key={item.id}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleNavClick(item.id)}
-                  className={`
-                    flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 relative
-                    ${isActive 
-                      ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25' 
-                      : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
-                    }
-                    ${isLocked ? 'opacity-60' : ''}
-                  `}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="text-sm">{item.label}</span>
-                  {isPremiumFeature && (
-                    <Crown className="w-3 h-3 text-amber-400" />
-                  )}
-                </motion.button>
-              );
-            })}
-            
-            {/* Legal Links Separator */}
-            <div className="w-px h-6 bg-gray-600 mx-2" />
-            
+
             {/* Legal Links */}
-            {legalItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = currentView === item.id;
-              
-              return (
-                <motion.button
-                  key={item.id}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleNavClick(item.id)}
-                  className={`
-                    flex items-center space-x-2 px-3 py-2 rounded-lg font-medium transition-all duration-200
-                    ${isActive 
-                      ? 'bg-gray-600 text-white shadow-lg shadow-gray-600/25' 
-                      : 'text-gray-500 hover:text-gray-300 hover:bg-dark-800'
-                    }
-                  `}
-                >
-                  <Icon className="w-3 h-3" />
-                  <span className="text-xs">{item.label}</span>
-                </motion.button>
-              );
-            })}
-          </nav>
+            <div className="flex items-center space-x-1 border-l border-gray-600 pl-4">
+              {legalItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = currentView === item.id;
+                
+                return (
+                  <motion.button
+                    key={item.id}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleNavClick(item.id)}
+                    className={`
+                      flex items-center space-x-1 px-2 py-1 rounded-lg font-medium transition-all duration-200
+                      ${isActive 
+                        ? 'bg-gray-600 text-white shadow-lg shadow-gray-600/25' 
+                        : 'text-gray-500 hover:text-gray-300 hover:bg-dark-800'
+                      }
+                    `}
+                  >
+                    <Icon className="w-3 h-3" />
+                    <span className="text-xs">{item.label}</span>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
 
           {/* Mobile Navigation Toggle */}
           <div className="lg:hidden flex items-center space-x-3">
@@ -254,7 +252,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                   e.currentTarget.style.display = 'none';
                 }}
               />
-              <span>Built on Bolt</span>
+              <span>Bolt</span>
             </motion.a>
 
             <motion.button
