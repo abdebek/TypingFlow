@@ -14,23 +14,114 @@ export function Footer({ onViewChange }: FooterProps) {
     { icon: Target, label: 'Precision', description: 'Advanced analytics' }
   ];
 
+  const scrollToTextInput = () => {
+    // Scroll to text display area
+    setTimeout(() => {
+      const textDisplay = document.getElementById('text-display-area');
+      if (textDisplay) {
+        textDisplay.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest'
+        });
+      }
+    }, 300);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleQuickStartAction = (action: () => void) => {
+    action();
+    // For test view, scroll to text input
+    if (action.toString().includes('test')) {
+      scrollToTextInput();
+    } else {
+      // For other views, scroll to top
+      scrollToTop();
+    }
+  };
+
   const quickLinks = [
-    { label: 'Start Typing Test', action: () => onViewChange?.('test') },
-    { label: 'View Statistics', action: () => onViewChange?.('stats') },
-    { label: 'Typing Tutorial', action: () => onViewChange?.('tutorial') },
-    { label: 'Challenges & Leaderboard', action: () => onViewChange?.('leaderboard') }
+    { 
+      label: 'Start Typing Test', 
+      action: () => {
+        onViewChange?.('test');
+        scrollToTextInput();
+      }
+    },
+    { 
+      label: 'View Statistics', 
+      action: () => {
+        onViewChange?.('stats');
+        scrollToTop();
+      }
+    },
+    { 
+      label: 'Typing Tutorial', 
+      action: () => {
+        onViewChange?.('tutorial');
+        scrollToTop();
+      }
+    },
+    { 
+      label: 'Challenges & Leaderboard', 
+      action: () => {
+        onViewChange?.('leaderboard');
+        scrollToTop();
+      }
+    }
   ];
 
   const premiumFeatures = [
-    { label: 'AI Typing Coach', action: () => onViewChange?.('ai-coach') },
-    { label: 'Multiplayer Racing', action: () => onViewChange?.('multiplayer') },
-    { label: 'Premium Features', action: () => onViewChange?.('premium') },
-    { label: 'Advanced Analytics', action: () => onViewChange?.('stats') }
+    { 
+      label: 'AI Typing Coach', 
+      action: () => {
+        onViewChange?.('ai-coach');
+        scrollToTop();
+      }
+    },
+    { 
+      label: 'Multiplayer Racing', 
+      action: () => {
+        onViewChange?.('multiplayer');
+        scrollToTop();
+      }
+    },
+    { 
+      label: 'Premium Features', 
+      action: () => {
+        onViewChange?.('premium');
+        scrollToTop();
+      }
+    },
+    { 
+      label: 'Advanced Analytics', 
+      action: () => {
+        onViewChange?.('stats');
+        scrollToTop();
+      }
+    }
   ];
 
   const supportLinks = [
-    { label: 'Privacy Policy', action: () => onViewChange?.('privacy'), icon: Shield },
-    { label: 'Terms of Service', action: () => onViewChange?.('terms'), icon: FileText },
+    { 
+      label: 'Privacy Policy', 
+      action: () => {
+        onViewChange?.('privacy');
+        scrollToTop();
+      }, 
+      icon: Shield 
+    },
+    { 
+      label: 'Terms of Service', 
+      action: () => {
+        onViewChange?.('terms');
+        scrollToTop();
+      }, 
+      icon: FileText 
+    },
     { label: 'Help & Support', href: 'mailto:support@typingflow.com', icon: HelpCircle },
     { label: 'Contact Us', href: 'mailto:hello@typingflow.com', icon: Mail }
   ];

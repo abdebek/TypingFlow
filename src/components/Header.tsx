@@ -45,6 +45,10 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
     }, 300);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleNavClick = (viewId: string) => {
     // Check if premium feature requires authentication
     const isPremiumFeature = premiumItems.some(item => item.id === viewId);
@@ -57,9 +61,11 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
     onViewChange(viewId);
     setIsMobileMenuOpen(false);
 
-    // Auto-scroll to text input when navigating to test view
+    // Auto-scroll behavior based on view
     if (viewId === 'test') {
       scrollToTextInput();
+    } else {
+      scrollToTop();
     }
   };
 

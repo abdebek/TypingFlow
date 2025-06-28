@@ -54,8 +54,18 @@ export function HackathonShowcase() {
   ];
 
   const handleStartJourney = () => {
-    // Navigate to test view
+    // Navigate to test view and scroll to text input
     window.location.hash = 'test';
+    setTimeout(() => {
+      const textDisplay = document.getElementById('text-display-area');
+      if (textDisplay) {
+        textDisplay.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest'
+        });
+      }
+    }, 300);
   };
 
   return (
