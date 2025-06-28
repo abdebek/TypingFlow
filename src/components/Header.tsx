@@ -42,6 +42,16 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
     
     onViewChange(viewId);
     setIsMobileMenuOpen(false);
+
+    // Auto-focus input when navigating to test view
+    if (viewId === 'test') {
+      setTimeout(() => {
+        const inputElement = document.querySelector('input[type="text"]') as HTMLInputElement;
+        if (inputElement) {
+          inputElement.focus();
+        }
+      }, 300);
+    }
   };
 
   const handleSignOut = async () => {

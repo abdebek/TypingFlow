@@ -144,6 +144,8 @@ function App() {
           resetWPMTracking();
           resetAdvancedMetrics();
           clearAllNotifications(); // Clear notifications on restart
+          // Focus input after restart
+          setTimeout(() => focusInput(), 200);
         }
       } catch (error) {
         trackError(error as Error, 'keyboard_input');
@@ -152,7 +154,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentView, handleKeyPress, restart, trackKeyPress, resetTracking, resetWPMTracking, addKeystroke, resetAdvancedMetrics, trackError, clearAllNotifications]);
+  }, [currentView, handleKeyPress, restart, trackKeyPress, resetTracking, resetWPMTracking, addKeystroke, resetAdvancedMetrics, trackError, clearAllNotifications, focusInput]);
 
   // Auto-focus input when switching to test view
   useEffect(() => {
@@ -200,6 +202,8 @@ function App() {
       message: 'Good luck with your typing challenge',
       duration: 2000
     });
+    // Focus input when starting challenge
+    setTimeout(() => focusInput(), 200);
   };
 
   const handleUpgrade = () => {
@@ -290,6 +294,7 @@ function App() {
                       onConfigChange={handleConfigChange}
                       onRestart={handleRestart}
                       onPauseResume={handlePauseResume}
+                      onFocusInput={focusInput} // Pass focus function
                       isActive={isActive}
                       isPaused={isPaused}
                       isCompleted={isCompleted}

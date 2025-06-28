@@ -8,6 +8,7 @@ interface TestControlsProps {
   onConfigChange: (config: TestConfig) => void;
   onRestart: () => void;
   onPauseResume: () => void;
+  onFocusInput: () => void; // Add this prop
   isActive: boolean;
   isPaused: boolean;
   isCompleted: boolean;
@@ -18,6 +19,7 @@ export function TestControls({
   onConfigChange, 
   onRestart, 
   onPauseResume,
+  onFocusInput, // Add this prop
   isActive, 
   isPaused,
   isCompleted 
@@ -30,6 +32,18 @@ export function TestControls({
     { value: 'literature', label: 'Literature' },
     { value: 'news', label: 'News' }
   ] as const;
+
+  const handleConfigChange = (newConfig: TestConfig) => {
+    onConfigChange(newConfig);
+    // Focus input after config change
+    setTimeout(() => onFocusInput(), 200);
+  };
+
+  const handleRestart = () => {
+    onRestart();
+    // Focus input after restart
+    setTimeout(() => onFocusInput(), 200);
+  };
 
   return (
     <motion.div
@@ -49,7 +63,7 @@ export function TestControls({
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => onConfigChange({ ...config, mode: 'time' })}
+              onClick={() => handleConfigChange({ ...config, mode: 'time' })}
               disabled={isActive && !isCompleted}
               className={`flex items-center space-x-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 ${
                 config.mode === 'time'
@@ -63,7 +77,7 @@ export function TestControls({
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => onConfigChange({ ...config, mode: 'words' })}
+              onClick={() => handleConfigChange({ ...config, mode: 'words' })}
               disabled={isActive && !isCompleted}
               className={`flex items-center space-x-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 ${
                 config.mode === 'words'
@@ -88,7 +102,7 @@ export function TestControls({
                 key={option}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onConfigChange({
+                onClick={() => handleConfigChange({
                   ...config,
                   [config.mode === 'time' ? 'timeLimit' : 'wordLimit']: option
                 })}
@@ -115,7 +129,7 @@ export function TestControls({
                   key={category.value}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => onConfigChange({ ...config, textCategory: category.value })}
+                  onClick={() => handleConfigChange({ ...config, textCategory: category.value })}
                   disabled={isActive && !isCompleted}
                   className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
                     config.textCategory === category.value
@@ -171,7 +185,7 @@ export function TestControls({
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={onRestart}
+            onClick={handleRestart}
             className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-success-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200"
           >
             <RefreshCw className="w-4 h-4" />
