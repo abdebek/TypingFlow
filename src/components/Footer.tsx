@@ -1,8 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Zap, Brain, Target, Users, Star, Github, ExternalLink, Award, Rocket } from 'lucide-react';
+import { Trophy, Zap, Brain, Target, Users, Star, Github, ExternalLink, Award, Rocket, Shield, FileText, Mail, HelpCircle } from 'lucide-react';
 
-export function Footer() {
+interface FooterProps {
+  onViewChange?: (view: string) => void;
+}
+
+export function Footer({ onViewChange }: FooterProps) {
   const hackathonAchievements = [
     { icon: Brain, label: 'AI-Powered', description: 'Smart coaching & insights' },
     { icon: Zap, label: 'Lightning Fast', description: 'Optimized performance' },
@@ -11,17 +15,24 @@ export function Footer() {
   ];
 
   const quickLinks = [
-    { label: 'Start Typing Test', action: () => window.location.hash = 'test' },
-    { label: 'View Leaderboard', action: () => window.location.hash = 'leaderboard' },
-    { label: 'AI Coach', action: () => window.location.hash = 'ai-coach' },
-    { label: 'Premium Features', action: () => window.location.hash = 'premium' }
+    { label: 'Start Typing Test', action: () => onViewChange?.('test') },
+    { label: 'View Statistics', action: () => onViewChange?.('stats') },
+    { label: 'Typing Tutorial', action: () => onViewChange?.('tutorial') },
+    { label: 'Challenges & Leaderboard', action: () => onViewChange?.('leaderboard') }
   ];
 
-  const resources = [
-    { label: 'Typing Tutorial', action: () => window.location.hash = 'tutorial' },
-    { label: 'Statistics', action: () => window.location.hash = 'stats' },
-    { label: 'Settings', action: () => window.location.hash = 'settings' },
-    { label: 'Help & Support', href: 'mailto:support@typingflow.com' }
+  const premiumFeatures = [
+    { label: 'AI Typing Coach', action: () => onViewChange?.('ai-coach') },
+    { label: 'Multiplayer Racing', action: () => onViewChange?.('multiplayer') },
+    { label: 'Premium Features', action: () => onViewChange?.('premium') },
+    { label: 'Advanced Analytics', action: () => onViewChange?.('stats') }
+  ];
+
+  const supportLinks = [
+    { label: 'Privacy Policy', action: () => onViewChange?.('privacy'), icon: Shield },
+    { label: 'Terms of Service', action: () => onViewChange?.('terms'), icon: FileText },
+    { label: 'Help & Support', href: 'mailto:support@typingflow.com', icon: HelpCircle },
+    { label: 'Contact Us', href: 'mailto:hello@typingflow.com', icon: Mail }
   ];
 
   return (
@@ -98,7 +109,7 @@ export function Footer() {
       </div>
 
       {/* Links Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
         {/* Quick Actions */}
         <div>
           <h4 className="font-semibold text-gray-200 mb-4 flex items-center space-x-2">
@@ -121,37 +132,62 @@ export function Footer() {
           </ul>
         </div>
 
-        {/* Resources */}
+        {/* Premium Features */}
         <div>
           <h4 className="font-semibold text-gray-200 mb-4 flex items-center space-x-2">
-            <Target className="w-4 h-4 text-amber-400" />
-            <span>Resources</span>
+            <Star className="w-4 h-4 text-amber-400" />
+            <span>Premium</span>
           </h4>
           <ul className="space-y-2">
-            {resources.map((link, index) => (
+            {premiumFeatures.map((link, index) => (
               <li key={index}>
-                {link.href ? (
-                  <motion.a
-                    whileHover={{ x: 4 }}
-                    href={link.href}
-                    className="text-gray-400 hover:text-amber-400 transition-colors text-sm flex items-center space-x-2"
-                  >
-                    <span className="w-1 h-1 bg-amber-400 rounded-full" />
-                    <span>{link.label}</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </motion.a>
-                ) : (
-                  <motion.button
-                    whileHover={{ x: 4 }}
-                    onClick={link.action}
-                    className="text-gray-400 hover:text-amber-400 transition-colors text-sm flex items-center space-x-2"
-                  >
-                    <span className="w-1 h-1 bg-amber-400 rounded-full" />
-                    <span>{link.label}</span>
-                  </motion.button>
-                )}
+                <motion.button
+                  whileHover={{ x: 4 }}
+                  onClick={link.action}
+                  className="text-gray-400 hover:text-amber-400 transition-colors text-sm flex items-center space-x-2"
+                >
+                  <span className="w-1 h-1 bg-amber-400 rounded-full" />
+                  <span>{link.label}</span>
+                </motion.button>
               </li>
             ))}
+          </ul>
+        </div>
+
+        {/* Support & Legal */}
+        <div>
+          <h4 className="font-semibold text-gray-200 mb-4 flex items-center space-x-2">
+            <HelpCircle className="w-4 h-4 text-blue-400" />
+            <span>Support</span>
+          </h4>
+          <ul className="space-y-2">
+            {supportLinks.map((link, index) => {
+              const Icon = link.icon;
+              return (
+                <li key={index}>
+                  {link.href ? (
+                    <motion.a
+                      whileHover={{ x: 4 }}
+                      href={link.href}
+                      className="text-gray-400 hover:text-blue-400 transition-colors text-sm flex items-center space-x-2"
+                    >
+                      <Icon className="w-3 h-3" />
+                      <span>{link.label}</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </motion.a>
+                  ) : (
+                    <motion.button
+                      whileHover={{ x: 4 }}
+                      onClick={link.action}
+                      className="text-gray-400 hover:text-blue-400 transition-colors text-sm flex items-center space-x-2"
+                    >
+                      <Icon className="w-3 h-3" />
+                      <span>{link.label}</span>
+                    </motion.button>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
 
@@ -209,25 +245,10 @@ export function Footer() {
         <div className="flex items-center space-x-4 text-sm text-gray-400">
           <span>&copy; 2025 TypingFlow</span>
           <span>•</span>
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            href="https://typing.waanfeetan.com/privacy"
-            className="hover:text-gray-200 transition-colors"
-          >
-            Privacy Policy
-          </motion.a>
-          <span>•</span>
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            href="https://typing.waanfeetan.com/terms"
-            className="hover:text-gray-200 transition-colors"
-          >
-            Terms of Service
-          </motion.a>
+          <span>Made for typing enthusiasts worldwide</span>
         </div>
         
         <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-400">Made for typing enthusiasts worldwide</span>
           <div className="flex items-center space-x-2">
             <div className="w-2 h-2 bg-success-400 rounded-full animate-pulse" />
             <span className="text-xs text-success-400">Live & Ready</span>

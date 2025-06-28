@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Keyboard, BarChart3, Settings, Trophy, BookOpen, Menu, X, FileText, Shield, Crown, Globe, Brain, User, LogOut } from 'lucide-react';
+import { Keyboard, BarChart3, Settings, Trophy, BookOpen, Menu, X, Crown, Globe, Brain, User, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
 import { AuthModal } from './AuthModal';
@@ -16,26 +16,25 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const { user, loading, isPremium } = useAuth();
 
+  // Core navigation items only
   const navItems = [
     { id: 'test', label: 'Test', icon: Keyboard },
-    { id: 'stats', label: 'Statistics', icon: BarChart3 },
+    { id: 'stats', label: 'Stats', icon: BarChart3 },
     { id: 'leaderboard', label: 'Challenges', icon: Trophy },
-    { id: 'multiplayer', label: 'Multiplayer', icon: Globe, premium: true },
-    { id: 'ai-coach', label: 'AI Coach', icon: Brain, premium: true },
     { id: 'tutorial', label: 'Tutorial', icon: BookOpen },
-    { id: 'premium', label: 'Premium', icon: Crown, premium: true },
-    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
-  const legalItems = [
-    { id: 'privacy', label: 'Privacy', icon: Shield },
-    { id: 'terms', label: 'Terms', icon: FileText },
+  // Premium features dropdown
+  const premiumItems = [
+    { id: 'multiplayer', label: 'Multiplayer Racing', icon: Globe },
+    { id: 'ai-coach', label: 'AI Coach', icon: Brain },
+    { id: 'premium', label: 'Upgrade to Premium', icon: Crown },
   ];
 
   const handleNavClick = (viewId: string) => {
     // Check if premium feature requires authentication
-    const item = navItems.find(nav => nav.id === viewId);
-    if (item?.premium && !user) {
+    const isPremiumFeature = premiumItems.some(item => item.id === viewId);
+    if (isPremiumFeature && !user) {
       setAuthMode('signup');
       setShowAuthModal(true);
       return;
@@ -63,7 +62,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
       <motion.header 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="glass-card p-4 md:p-6 mb-6 md:mb-8 relative"
+        className="glass-card p-4 md:p-6 mb-6 md:mb-8"
       >
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -88,13 +87,11 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
             </div>
           </div>
 
-          {/* Desktop Navigation - Centered */}
-          <nav className="hidden lg:flex items-center space-x-1 absolute left-1/2 transform -translate-x-1/2">
+          {/* Desktop Navigation - Core items only */}
+          <nav className="hidden lg:flex items-center space-x-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentView === item.id;
-              const isPremiumFeature = item.premium;
-              const isLocked = isPremiumFeature && !isPremium && user;
               
               return (
                 <motion.button
@@ -103,22 +100,85 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleNavClick(item.id)}
                   className={`
-                    flex items-center space-x-2 px-3 py-2 rounded-lg font-medium transition-all duration-200 relative
+                    flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
                     ${isActive 
                       ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25' 
                       : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
                     }
-                    ${isLocked ? 'opacity-60' : ''}
                   `}
                 >
                   <Icon className="w-4 h-4" />
                   <span className="text-sm">{item.label}</span>
-                  {isPremiumFeature && (
-                    <Crown className="w-3 h-3 text-amber-400" />
-                  )}
                 </motion.button>
               );
             })}
+
+            {/* Premium Dropdown */}
+            <div className="relative group">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                className={`
+                  flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
+                  ${premiumItems.some(item => currentView === item.id)
+                    ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/25' 
+                    : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
+                  }
+                `}
+              >
+                <Crown className="w-4 h-4" />
+                <span className="text-sm">Premium</span>
+                {isPremium && (
+                  <div className="w-2 h-2 bg-amber-400 rounded-full" />
+                )}
+              </motion.button>
+
+              {/* Dropdown Menu */}
+              <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="glass-card p-2 border border-gray-600/50">
+                  {premiumItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = currentView === item.id;
+                    const isLocked = !isPremium && item.id !== 'premium';
+                    
+                    return (
+                      <motion.button
+                        key={item.id}
+                        whileHover={{ scale: 1.02 }}
+                        onClick={() => handleNavClick(item.id)}
+                        className={`
+                          w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium transition-all duration-200 text-left
+                          ${isActive 
+                            ? 'bg-primary-600 text-white' 
+                            : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
+                          }
+                          ${isLocked ? 'opacity-60' : ''}
+                        `}
+                      >
+                        <Icon className="w-4 h-4" />
+                        <span className="text-sm">{item.label}</span>
+                        {isLocked && <Crown className="w-3 h-3 text-amber-400 ml-auto" />}
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Settings */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleNavClick('settings')}
+              className={`
+                p-2 rounded-lg transition-all duration-200
+                ${currentView === 'settings'
+                  ? 'bg-gray-600 text-white shadow-lg shadow-gray-600/25' 
+                  : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
+                }
+              `}
+            >
+              <Settings className="w-4 h-4" />
+            </motion.button>
           </nav>
 
           {/* Right Side - User & Built on Bolt */}
@@ -191,33 +251,6 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
               />
               <span className="text-sm font-semibold">Built on Bolt</span>
             </motion.a>
-
-            {/* Legal Links */}
-            <div className="flex items-center space-x-1 border-l border-gray-600 pl-4">
-              {legalItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = currentView === item.id;
-                
-                return (
-                  <motion.button
-                    key={item.id}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleNavClick(item.id)}
-                    className={`
-                      flex items-center space-x-1 px-2 py-1 rounded-lg font-medium transition-all duration-200
-                      ${isActive 
-                        ? 'bg-gray-600 text-white shadow-lg shadow-gray-600/25' 
-                        : 'text-gray-500 hover:text-gray-300 hover:bg-dark-800'
-                      }
-                    `}
-                  >
-                    <Icon className="w-3 h-3" />
-                    <span className="text-xs">{item.label}</span>
-                  </motion.button>
-                );
-              })}
-            </div>
           </div>
 
           {/* Mobile Navigation Toggle */}
@@ -329,12 +362,10 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                   </div>
                 )}
 
-                {/* Main Navigation */}
+                {/* Core Navigation */}
                 {navItems.map((item, index) => {
                   const Icon = item.icon;
                   const isActive = currentView === item.id;
-                  const isPremiumFeature = item.premium;
-                  const isLocked = isPremiumFeature && !isPremium && user;
                   
                   return (
                     <motion.button
@@ -346,28 +377,26 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleNavClick(item.id)}
                       className={`
-                        flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 text-left relative
+                        flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 text-left
                         ${isActive 
                           ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25' 
                           : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
                         }
-                        ${isLocked ? 'opacity-60' : ''}
                       `}
                     >
                       <Icon className="w-5 h-5" />
                       <span>{item.label}</span>
-                      {isPremiumFeature && (
-                        <Crown className="w-4 h-4 text-amber-400" />
-                      )}
                     </motion.button>
                   );
                 })}
                 
-                {/* Legal Links */}
+                {/* Premium Section */}
                 <div className="border-t border-gray-700/30 mt-2 pt-2">
-                  {legalItems.map((item, index) => {
+                  <div className="text-xs text-gray-500 px-4 py-2 font-medium">Premium Features</div>
+                  {premiumItems.map((item, index) => {
                     const Icon = item.icon;
                     const isActive = currentView === item.id;
+                    const isLocked = !isPremium && item.id !== 'premium';
                     
                     return (
                       <motion.button
@@ -379,18 +408,44 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleNavClick(item.id)}
                         className={`
-                          flex items-center space-x-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 text-left
+                          flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 text-left
                           ${isActive 
-                            ? 'bg-gray-600 text-white shadow-lg shadow-gray-600/25' 
-                            : 'text-gray-500 hover:text-gray-300 hover:bg-dark-800'
+                            ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/25' 
+                            : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
                           }
+                          ${isLocked ? 'opacity-60' : ''}
                         `}
                       >
-                        <Icon className="w-4 h-4" />
-                        <span className="text-sm">{item.label}</span>
+                        <Icon className="w-5 h-5" />
+                        <span>{item.label}</span>
+                        {isLocked && (
+                          <Crown className="w-4 h-4 text-amber-400 ml-auto" />
+                        )}
                       </motion.button>
                     );
                   })}
+                </div>
+
+                {/* Settings */}
+                <div className="border-t border-gray-700/30 mt-2 pt-2">
+                  <motion.button
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length + premiumItems.length) * 0.05 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleNavClick('settings')}
+                    className={`
+                      flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 text-left w-full
+                      ${currentView === 'settings'
+                        ? 'bg-gray-600 text-white shadow-lg shadow-gray-600/25' 
+                        : 'text-gray-400 hover:text-gray-200 hover:bg-dark-800'
+                      }
+                    `}
+                  >
+                    <Settings className="w-5 h-5" />
+                    <span>Settings</span>
+                  </motion.button>
                 </div>
               </nav>
             </motion.div>

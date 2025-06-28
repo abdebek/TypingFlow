@@ -514,7 +514,7 @@ function App() {
             )}
           </AnimatePresence>
 
-          <Footer />
+          <Footer onViewChange={setCurrentView} />
         </div>
       </div>
     </ErrorBoundary>
