@@ -64,7 +64,7 @@ export function Footer() {
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="https://github.com/abdebek/KeyboardTypingTest"
+              href="https://github.com/abdebek/TypingFlow"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center space-x-2 bg-dark-800 text-gray-300 px-4 py-2 rounded-lg hover:bg-dark-700 transition-colors"
@@ -169,24 +169,24 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Stats Bar */}
+      {/* Project Stats Bar - Realistic Numbers */}
       <div className="bg-dark-800/50 rounded-lg p-4 mb-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div>
-            <div className="text-2xl font-bold text-primary-400">50K+</div>
-            <div className="text-xs text-gray-400">Tests Completed</div>
+            <div className="text-2xl font-bold text-primary-400">2025</div>
+            <div className="text-xs text-gray-400">Built for the Future</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-success-400">95%</div>
-            <div className="text-xs text-gray-400">User Satisfaction</div>
+            <div className="text-2xl font-bold text-success-400">6</div>
+            <div className="text-xs text-gray-400">Prize Categories</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-amber-400">12</div>
+            <div className="text-2xl font-bold text-amber-400">5</div>
             <div className="text-xs text-gray-400">AI Providers</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-purple-400">24/7</div>
-            <div className="text-xs text-gray-400">Available</div>
+            <div className="text-2xl font-bold text-purple-400">100%</div>
+            <div className="text-xs text-gray-400">Open Source</div>
           </div>
         </div>
       </div>
