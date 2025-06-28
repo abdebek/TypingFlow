@@ -150,7 +150,7 @@ export async function signOut() {
   if (error) throw error;
 }
 
-// Typing results functions
+// Typing results functions - now using edge function for security
 export async function saveTypingResult(result: {
   wpm: number;
   accuracy: number;
@@ -159,18 +159,14 @@ export async function saveTypingResult(result: {
   test_type: string;
   text_category: string;
 }) {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('Not authenticated');
-
-  const { data, error } = await supabase
-    .from('typing_results')
-    .insert({
-      user_id: user.id,
-      ...result
-    });
-
-  if (error) throw error;
-  return data;
+  // This now calls the secure edge function
+  const { updateLeaderboard } = await import('./api');
+  return updateLeaderboard({
+    wpm: result.wpm,
+    accuracy: result.accuracy,
+    consistency: result.consistency,
+    testType: result.test_type
+  });
 }
 
 export async function getUserResults(userId: string, limit = 50) {
@@ -209,7 +205,7 @@ export async function getGlobalLeaderboard(
   return data;
 }
 
-// Multiplayer functions
+// Multiplayer functions - now using edge function for security
 export async function createMultiplayerRoom(name: string, textContent: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Not authenticated');
@@ -226,25 +222,16 @@ export async function createMultiplayerRoom(name: string, textContent: string) {
 
   if (error) throw error;
 
-  // Join the room as creator
-  await joinMultiplayerRoom(data.id);
+  // Join the room as creator using secure edge function
+  const { manageMultiplayerRoom } = await import('./api');
+  await manageMultiplayerRoom('join_room', data.id);
   
   return data;
 }
 
 export async function joinMultiplayerRoom(roomId: string) {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('Not authenticated');
-
-  const { data, error } = await supabase
-    .from('room_participants')
-    .insert({
-      room_id: roomId,
-      user_id: user.id
-    });
-
-  if (error) throw error;
-  return data;
+  const { manageMultiplayerRoom } = await import('./api');
+  return manageMultiplayerRoom('join_room', roomId);
 }
 
 export async function updateRoomProgress(
@@ -253,22 +240,8 @@ export async function updateRoomProgress(
   wpm: number,
   accuracy: number
 ) {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('Not authenticated');
-
-  const { data, error } = await supabase
-    .from('room_participants')
-    .update({
-      progress,
-      wpm,
-      accuracy,
-      finished_at: progress >= 100 ? new Date().toISOString() : null
-    })
-    .eq('room_id', roomId)
-    .eq('user_id', user.id);
-
-  if (error) throw error;
-  return data;
+  const { manageMultiplayerRoom } = await import('./api');
+  return manageMultiplayerRoom('update_progress', roomId, { progress, wpm, accuracy });
 }
 
 // Real-time subscriptions
@@ -288,12 +261,11 @@ export function subscribeToRoom(roomId: string, callback: (payload: any) => void
     .subscribe();
 }
 
-// Premium subscription functions
+// Premium subscription functions - already secure with edge functions
 export async function createStripeCheckout(priceId: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Not authenticated');
 
-  // This would call your edge function that creates Stripe checkout
   const { data, error } = await supabase.functions.invoke('create-checkout', {
     body: { priceId, userId: user.id }
   });
