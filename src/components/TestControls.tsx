@@ -59,6 +59,14 @@ export function TestControls({
     setTimeout(() => scrollToTextInput(), 200);
   };
 
+  const handlePauseResume = () => {
+    onPauseResume();
+    // If resuming, focus the input and scroll to it
+    if (isPaused) {
+      setTimeout(() => scrollToTextInput(), 200);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -183,7 +191,7 @@ export function TestControls({
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={onPauseResume}
+              onClick={handlePauseResume}
               className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 ${
                 isPaused 
                   ? 'bg-success-600 text-white hover:bg-success-700'
