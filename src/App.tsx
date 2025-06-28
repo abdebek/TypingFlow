@@ -255,10 +255,11 @@ function App() {
           onRemove={removeNotification} 
         />
 
-        {/* Use wider container and better space utilization */}
-        <div className="relative z-10 container mx-auto px-4 py-4 md:py-8 max-w-9xl">
-          <Header currentView={currentView} onViewChange={setCurrentView} />
+        {/* Header now spans full width */}
+        <Header currentView={currentView} onViewChange={setCurrentView} />
 
+        {/* Content with wider container */}
+        <div className="relative z-10 container mx-auto px-4 py-4 md:py-8 max-w-9xl">
           <AnimatePresence mode="wait">
             {currentView === 'hackathon' && (
               <motion.div
