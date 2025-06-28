@@ -152,6 +152,10 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 src="/black_circle_360x360.png"
                 alt="Built on Bolt"
                 className="w-5 h-5"
+                onError={(e) => {
+                  // Fallback if image doesn't load
+                  e.currentTarget.style.display = 'none';
+                }}
               />
               <span className="text-sm font-semibold">Built on Bolt</span>
             </motion.a>
@@ -246,6 +250,9 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
                 src="/black_circle_360x360.png"
                 alt="Built on Bolt"
                 className="w-4 h-4"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
               />
               <span>Built on Bolt</span>
             </motion.a>

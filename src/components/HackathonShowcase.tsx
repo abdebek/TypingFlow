@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Zap, Brain, Palette, Users, Target, Star, Award, Rocket, Code } from 'lucide-react';
+import { Trophy, Zap, Brain, Palette, Users, Target, Star, Award, Rocket, Code, ExternalLink } from 'lucide-react';
 
 export function HackathonShowcase() {
   const achievements = [
@@ -53,6 +53,11 @@ export function HackathonShowcase() {
     'Production-ready authentication and payment systems'
   ];
 
+  const handleStartJourney = () => {
+    // Navigate to test view
+    window.location.hash = 'test';
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -79,7 +84,7 @@ export function HackathonShowcase() {
             TypingFlow - Revolutionizing Typing Education with AI
           </p>
           
-          <div className="flex items-center justify-center space-x-4 text-sm text-gray-400">
+          <div className="flex items-center justify-center space-x-4 text-sm text-gray-400 mb-6">
             <div className="flex items-center space-x-2">
               <Code className="w-4 h-4" />
               <span>Built with Bolt.new</span>
@@ -94,6 +99,45 @@ export function HackathonShowcase() {
               <Award className="w-4 h-4" />
               <span>Multiple Prize Categories</span>
             </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              href="https://github.com/abdebek/TypingFlow"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 px-4 py-2 bg-dark-800 text-gray-300 rounded-lg hover:bg-dark-700 transition-colors"
+            >
+              <span>View Source Code</span>
+              <ExternalLink className="w-4 h-4" />
+            </motion.a>
+            
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              href="https://bolt.new"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg"
+            >
+              <span>Built on Bolt.new</span>
+              <ExternalLink className="w-4 h-4" />
+            </motion.a>
+            
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              href="https://typing.waanfeetan.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 px-4 py-2 bg-success-600 text-white rounded-lg hover:bg-success-700 transition-colors"
+            >
+              <span>Live Demo</span>
+              <ExternalLink className="w-4 h-4" />
+            </motion.a>
           </div>
         </div>
       </div>
@@ -190,6 +234,7 @@ export function HackathonShowcase() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          onClick={handleStartJourney}
           className="px-8 py-4 bg-gradient-to-r from-primary-600 to-success-600 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-200"
         >
           Start Your Typing Journey

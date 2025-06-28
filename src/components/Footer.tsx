@@ -11,16 +11,16 @@ export function Footer() {
   ];
 
   const quickLinks = [
-    { label: 'Start Typing Test', href: '#', action: () => window.location.hash = 'test' },
-    { label: 'View Leaderboard', href: '#', action: () => window.location.hash = 'leaderboard' },
-    { label: 'AI Coach', href: '#', action: () => window.location.hash = 'ai-coach' },
-    { label: 'Premium Features', href: '#', action: () => window.location.hash = 'premium' }
+    { label: 'Start Typing Test', action: () => window.location.hash = 'test' },
+    { label: 'View Leaderboard', action: () => window.location.hash = 'leaderboard' },
+    { label: 'AI Coach', action: () => window.location.hash = 'ai-coach' },
+    { label: 'Premium Features', action: () => window.location.hash = 'premium' }
   ];
 
   const resources = [
-    { label: 'Typing Tutorial', href: '#', action: () => window.location.hash = 'tutorial' },
-    { label: 'Statistics', href: '#', action: () => window.location.hash = 'stats' },
-    { label: 'Settings', href: '#', action: () => window.location.hash = 'settings' },
+    { label: 'Typing Tutorial', action: () => window.location.hash = 'tutorial' },
+    { label: 'Statistics', action: () => window.location.hash = 'stats' },
+    { label: 'Settings', action: () => window.location.hash = 'settings' },
     { label: 'Help & Support', href: 'mailto:support@typingflow.com' }
   ];
 
@@ -71,6 +71,7 @@ export function Footer() {
             >
               <Github className="w-4 h-4" />
               <span>View Source</span>
+              <ExternalLink className="w-4 h-4" />
             </motion.a>
           </div>
         </div>
@@ -129,14 +130,26 @@ export function Footer() {
           <ul className="space-y-2">
             {resources.map((link, index) => (
               <li key={index}>
-                <motion.button
-                  whileHover={{ x: 4 }}
-                  onClick={link.action}
-                  className="text-gray-400 hover:text-amber-400 transition-colors text-sm flex items-center space-x-2"
-                >
-                  <span className="w-1 h-1 bg-amber-400 rounded-full" />
-                  <span>{link.label}</span>
-                </motion.button>
+                {link.href ? (
+                  <motion.a
+                    whileHover={{ x: 4 }}
+                    href={link.href}
+                    className="text-gray-400 hover:text-amber-400 transition-colors text-sm flex items-center space-x-2"
+                  >
+                    <span className="w-1 h-1 bg-amber-400 rounded-full" />
+                    <span>{link.label}</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </motion.a>
+                ) : (
+                  <motion.button
+                    whileHover={{ x: 4 }}
+                    onClick={link.action}
+                    className="text-gray-400 hover:text-amber-400 transition-colors text-sm flex items-center space-x-2"
+                  >
+                    <span className="w-1 h-1 bg-amber-400 rounded-full" />
+                    <span>{link.label}</span>
+                  </motion.button>
+                )}
               </li>
             ))}
           </ul>
@@ -196,9 +209,21 @@ export function Footer() {
         <div className="flex items-center space-x-4 text-sm text-gray-400">
           <span>&copy; 2025 TypingFlow</span>
           <span>•</span>
-          <button className="hover:text-gray-200 transition-colors">Privacy Policy</button>
+          <motion.a
+            whileHover={{ scale: 1.05 }}
+            href="https://typing.waanfeetan.com/privacy"
+            className="hover:text-gray-200 transition-colors"
+          >
+            Privacy Policy
+          </motion.a>
           <span>•</span>
-          <button className="hover:text-gray-200 transition-colors">Terms of Service</button>
+          <motion.a
+            whileHover={{ scale: 1.05 }}
+            href="https://typing.waanfeetan.com/terms"
+            className="hover:text-gray-200 transition-colors"
+          >
+            Terms of Service
+          </motion.a>
         </div>
         
         <div className="flex items-center space-x-4">
