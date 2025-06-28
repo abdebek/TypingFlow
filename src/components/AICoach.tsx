@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Brain, Target, TrendingUp, Lightbulb, MessageCircle, Zap, BarChart3, Clock } from 'lucide-react';
-import { analyzeTypingPatterns, getPerformanceInsights, getCacheStats, clearAICache } from '../lib/ai';
+import { Brain, Target, TrendingUp, Lightbulb, MessageCircle, Zap, BarChart3, Clock, Settings } from 'lucide-react';
+import { analyzeTypingPatterns, getPerformanceInsights, getCacheStats, clearAICache, getChatResponse, AI_PROVIDERS } from '../lib/ai';
 import { LoadingSpinner } from './LoadingSpinner';
 
 interface AIInsight {
@@ -16,12 +16,14 @@ export function AICoach() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [cacheStats, setCacheStats] = useState<any>(null);
   const [chatMessage, setChatMessage] = useState('');
-  const [chatHistory, setChatHistory] = useState<Array<{role: 'user' | 'ai', message: string}>>([
+  const [chatHistory, setChatHistory] = useState<Array<{role: 'user' | 'ai', message: string, provider?: string, cost?: number}>>([
     {
       role: 'ai',
       message: "Hi! I'm your AI typing coach. I can help you improve your typing speed and accuracy. What would you like to work on today?"
     }
   ]);
+  const [preferredProvider, setPreferredProvider] = useState<string>('auto');
+  const [showProviderSettings, setShowProviderSettings] = useState(false);
 
   useEffect(() => {
     loadAIAnalysis();
@@ -35,7 +37,10 @@ export function AICoach() {
       const typingHistory = JSON.parse(localStorage.getItem('typingResults') || '[]');
       
       if (typingHistory.length > 0) {
-        const analysis = await analyzeTypingPatterns(typingHistory);
+        const analysis = await analyzeTypingPatterns(
+          typingHistory, 
+          preferredProvider === 'auto' ? undefined : preferredProvider
+        );
         
         const newInsights: AIInsight[] = [
           ...analysis.weaknesses.map(w => ({
@@ -108,13 +113,17 @@ export function AICoach() {
     setChatHistory(prev => [...prev, { role: 'user', message: userMessage }]);
 
     try {
-      // Get AI response based on recent typing data
-      const recentTests = JSON.parse(localStorage.getItem('typingResults') || '[]').slice(-5);
-      const insights = await getPerformanceInsights([...recentTests, { query: userMessage }]);
+      const response = await getChatResponse(
+        userMessage,
+        preferredProvider === 'auto' ? undefined : preferredProvider
+      );
       
-      const aiResponse = insights[0] || "I'd be happy to help you improve your typing! Try taking a few more tests so I can provide better insights.";
-      
-      setChatHistory(prev => [...prev, { role: 'ai', message: aiResponse }]);
+      setChatHistory(prev => [...prev, { 
+        role: 'ai', 
+        message: response,
+        provider: preferredProvider,
+        cost: 0.001 // Estimated cost
+      }]);
     } catch (error) {
       setChatHistory(prev => [...prev, { 
         role: 'ai', 
@@ -166,30 +175,99 @@ export function AICoach() {
             <h2 className="text-2xl font-bold text-gray-200">AI Typing Coach</h2>
           </div>
           
-          {/* Cache Stats */}
-          {cacheStats && (
-            <div className="flex items-center space-x-4 text-sm text-gray-400">
-              <div className="flex items-center space-x-1">
-                <BarChart3 className="w-4 h-4" />
-                <span>{cacheStats.cacheHitRate}% cache hit rate</span>
+          {/* Controls */}
+          <div className="flex items-center space-x-4">
+            {/* Provider Settings */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowProviderSettings(!showProviderSettings)}
+              className="p-2 bg-dark-800 text-gray-400 rounded-lg hover:text-gray-200 transition-colors"
+              title="AI Provider Settings"
+            >
+              <Settings className="w-4 h-4" />
+            </motion.button>
+
+            {/* Cache Stats */}
+            {cacheStats && (
+              <div className="flex items-center space-x-4 text-sm text-gray-400">
+                <div className="flex items-center space-x-1">
+                  <BarChart3 className="w-4 h-4" />
+                  <span>{cacheStats.cacheHitRate}% cache hit rate</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Clock className="w-4 h-4" />
+                  <span>{cacheStats.totalRequests} requests</span>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleClearCache}
+                  className="px-3 py-1 bg-dark-800 text-gray-400 rounded hover:text-gray-200 transition-colors"
+                >
+                  Clear Cache
+                </motion.button>
               </div>
-              <div className="flex items-center space-x-1">
-                <Clock className="w-4 h-4" />
-                <span>{cacheStats.totalRequests} requests</span>
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleClearCache}
-                className="px-3 py-1 bg-dark-800 text-gray-400 rounded hover:text-gray-200 transition-colors"
-              >
-                Clear Cache
-              </motion.button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
+
+        {/* Provider Settings Panel */}
+        {showProviderSettings && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-4 p-4 bg-dark-800/50 rounded-lg border border-gray-700/30"
+          >
+            <h4 className="text-sm font-medium text-gray-300 mb-3">AI Provider Preference</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setPreferredProvider('auto')}
+                className={`p-3 rounded-lg text-left transition-all ${
+                  preferredProvider === 'auto'
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-dark-700 text-gray-300 hover:bg-dark-600'
+                }`}
+              >
+                <div className="font-medium">Auto Select</div>
+                <div className="text-xs opacity-80">Best provider for each task</div>
+              </motion.button>
+              
+              {Object.entries(AI_PROVIDERS).map(([key, provider]) => (
+                <motion.button
+                  key={key}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setPreferredProvider(key)}
+                  className={`p-3 rounded-lg text-left transition-all ${
+                    preferredProvider === key
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-dark-700 text-gray-300 hover:bg-dark-600'
+                  }`}
+                >
+                  <div className="font-medium">{provider.name}</div>
+                  <div className="text-xs opacity-80">{provider.description}</div>
+                  <div className="text-xs mt-1">
+                    <span className={`px-2 py-0.5 rounded-full text-xs ${
+                      provider.cost === 'Very Low' ? 'bg-green-600/20 text-green-400' :
+                      provider.cost === 'Low' ? 'bg-blue-600/20 text-blue-400' :
+                      provider.cost === 'Medium' ? 'bg-amber-600/20 text-amber-400' :
+                      'bg-red-600/20 text-red-400'
+                    }`}>
+                      {provider.cost} Cost
+                    </span>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
         <p className="text-gray-400">
-          Personalized insights and recommendations powered by artificial intelligence
+          Personalized insights powered by multiple AI providers with smart fallback support
         </p>
       </div>
 
@@ -264,6 +342,11 @@ export function AICoach() {
         <div className="flex items-center space-x-3 mb-4">
           <MessageCircle className="w-5 h-5 text-success-400" />
           <h3 className="text-lg font-semibold text-gray-200">Ask Your AI Coach</h3>
+          {preferredProvider !== 'auto' && (
+            <span className="text-xs bg-primary-600/20 text-primary-400 px-2 py-1 rounded-full">
+              Using {AI_PROVIDERS[preferredProvider as keyof typeof AI_PROVIDERS]?.name}
+            </span>
+          )}
         </div>
         
         <div className="space-y-4">
@@ -289,6 +372,11 @@ export function AICoach() {
                   }`}
                 >
                   <p className="text-sm">{chat.message}</p>
+                  {chat.provider && chat.cost && (
+                    <div className="text-xs opacity-60 mt-1">
+                      {chat.provider} • ${chat.cost.toFixed(4)}
+                    </div>
+                  )}
                 </div>
                 {chat.role === 'user' && (
                   <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">

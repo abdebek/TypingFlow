@@ -8,7 +8,15 @@ export interface TypingAnalysis {
   nextGoals: string[];
 }
 
-export async function analyzeTypingPatterns(typingHistory: any[]): Promise<TypingAnalysis> {
+export interface AIResponse {
+  analysis: string;
+  cached: boolean;
+  cacheKey: string;
+  provider: string;
+  cost: number;
+}
+
+export async function analyzeTypingPatterns(typingHistory: any[], preferredProvider?: string): Promise<TypingAnalysis> {
   if (!typingHistory.length) {
     return {
       weaknesses: [],
@@ -26,7 +34,8 @@ export async function analyzeTypingPatterns(typingHistory: any[]): Promise<Typin
       body: { 
         type: 'typing_analysis',
         data: typingHistory,
-        userId: session.user.id 
+        userId: session.user.id,
+        preferredProvider
       }
     });
 
@@ -48,7 +57,7 @@ export async function analyzeTypingPatterns(typingHistory: any[]): Promise<Typin
   }
 }
 
-export async function generatePersonalizedLesson(weaknesses: string[]): Promise<string> {
+export async function generatePersonalizedLesson(weaknesses: string[], preferredProvider?: string): Promise<string> {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) throw new Error('Not authenticated');
@@ -57,7 +66,8 @@ export async function generatePersonalizedLesson(weaknesses: string[]): Promise<
       body: { 
         type: 'personalized_lesson',
         data: { weaknesses },
-        userId: session.user.id 
+        userId: session.user.id,
+        preferredProvider
       }
     });
 
@@ -69,7 +79,7 @@ export async function generatePersonalizedLesson(weaknesses: string[]): Promise<
   }
 }
 
-export async function getPerformanceInsights(recentTests: any[]): Promise<string[]> {
+export async function getPerformanceInsights(recentTests: any[], preferredProvider?: string): Promise<string[]> {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) throw new Error('Not authenticated');
@@ -78,7 +88,8 @@ export async function getPerformanceInsights(recentTests: any[]): Promise<string
       body: { 
         type: 'performance_insights',
         data: recentTests,
-        userId: session.user.id 
+        userId: session.user.id,
+        preferredProvider
       }
     });
 
@@ -90,6 +101,28 @@ export async function getPerformanceInsights(recentTests: any[]): Promise<string
   } catch (error) {
     console.error('Failed to get insights:', error);
     return ['Keep practicing to improve your typing skills!'];
+  }
+}
+
+export async function getChatResponse(message: string, preferredProvider?: string): Promise<string> {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw new Error('Not authenticated');
+
+    const { data, error } = await supabase.functions.invoke('ai-analysis', {
+      body: { 
+        type: 'chat_response',
+        data: { message },
+        userId: session.user.id,
+        preferredProvider
+      }
+    });
+
+    if (error) throw error;
+    return data.analysis;
+  } catch (error) {
+    console.error('Failed to get chat response:', error);
+    return "I'm having trouble processing your request right now. Please try again later!";
   }
 }
 
@@ -170,3 +203,12 @@ export async function getCacheStats(): Promise<any> {
     return null;
   }
 }
+
+// Provider preference management
+export const AI_PROVIDERS = {
+  openai: { name: 'OpenAI GPT', description: 'Best for complex analysis', cost: 'Medium' },
+  anthropic: { name: 'Anthropic Claude', description: 'Excellent for creative text', cost: 'Low' },
+  google: { name: 'Google Gemini', description: 'Cost-effective for most tasks', cost: 'Low' },
+  cohere: { name: 'Cohere', description: 'Great for conversations', cost: 'Medium' },
+  huggingface: { name: 'HuggingFace', description: 'Cheapest option', cost: 'Very Low' }
+};
