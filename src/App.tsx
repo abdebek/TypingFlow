@@ -26,6 +26,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { OfflineMode } from './components/OfflineMode';
 import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 import { NotificationSystem, useNotifications } from './components/NotificationSystem';
+import { HackathonShowcase } from './components/HackathonShowcase';
 import { useTypingTest } from './hooks/useTypingTest';
 import { useKeyboardTracking } from './hooks/useKeyboardTracking';
 import { useWPMTracking } from './hooks/useWPMTracking';
@@ -35,7 +36,7 @@ import { getRandomText, generateCustomText, getTextForDuration } from './data/te
 import { TestConfig } from './types';
 
 function App() {
-  const [currentView, setCurrentView] = useState('test');
+  const [currentView, setCurrentView] = useState('hackathon');
   const [showAdvancedMetrics, setShowAdvancedMetrics] = useState(false);
   const [config, setConfig] = useState<TestConfig>({
     mode: 'time',
@@ -81,6 +82,17 @@ function App() {
 
   const { wpmHistory, resetWPMTracking } = useWPMTracking(isActive && !isPaused, stats.wpm, stats.accuracy);
   const { metrics, addKeystroke, reset: resetAdvancedMetrics } = useAdvancedMetrics();
+
+  // Show hackathon showcase on first load
+  useEffect(() => {
+    const hasSeenShowcase = localStorage.getItem('hasSeenHackathonShowcase');
+    if (!hasSeenShowcase) {
+      setCurrentView('hackathon');
+      localStorage.setItem('hasSeenHackathonShowcase', 'true');
+    } else {
+      setCurrentView('test');
+    }
+  }, []);
 
   // Generate new text when config changes
   useEffect(() => {
@@ -246,6 +258,18 @@ function App() {
           <Header currentView={currentView} onViewChange={setCurrentView} />
 
           <AnimatePresence mode="wait">
+            {currentView === 'hackathon' && (
+              <motion.div
+                key="hackathon"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <HackathonShowcase />
+              </motion.div>
+            )}
+
             {currentView === 'test' && (
               <motion.div
                 key="test"

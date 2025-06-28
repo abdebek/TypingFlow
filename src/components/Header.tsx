@@ -88,7 +88,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
             </div>
           </div>
 
-          {/* User Section & Bolt Badge */}
+          {/* User Section & Built on Bolt Badge */}
           <div className="hidden lg:flex items-center space-x-4">
             {/* User Authentication */}
             {!loading && (
@@ -138,26 +138,27 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
               </div>
             )}
 
-            {/* Bolt.new Badge */}
+            {/* Built on Bolt Badge - REQUIRED FOR HACKATHON */}
             <motion.a
               href="https://bolt.new"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="block"
-              title="Built with Bolt.new"
+              className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+              title="Built with Bolt.new - World's Largest Hackathon Entry"
             >
               <img
                 src="/black_circle_360x360.png"
-                alt="Built with Bolt.new"
-                className="w-8 h-8 md:w-10 md:h-10 opacity-80 hover:opacity-100 transition-opacity duration-200"
+                alt="Built on Bolt"
+                className="w-5 h-5"
               />
+              <span className="text-sm font-semibold">Built on Bolt</span>
             </motion.a>
           </div>
           
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1 mr-20">
+          <nav className="hidden lg:flex items-center space-x-1 mr-32">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentView === item.id;
@@ -231,21 +232,22 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
               </motion.button>
             )}
 
-            {/* Bolt.new Badge - Mobile */}
+            {/* Built on Bolt Badge - Mobile */}
             <motion.a
               href="https://bolt.new"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="block"
+              className="flex items-center space-x-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-2 py-1 rounded text-xs font-medium"
               title="Built with Bolt.new"
             >
               <img
                 src="/black_circle_360x360.png"
-                alt="Built with Bolt.new"
-                className="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity duration-200"
+                alt="Built on Bolt"
+                className="w-4 h-4"
               />
+              <span>Built on Bolt</span>
             </motion.a>
 
             <motion.button

@@ -2,7 +2,7 @@ import React from 'react';
 
 export function SEOHead() {
   React.useEffect(() => {
-    // Update meta tags for better social sharing
+    // Update meta tags for better social sharing and hackathon visibility
     const updateMetaTag = (property: string, content: string) => {
       let element = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement;
       if (!element) {
@@ -24,25 +24,31 @@ export function SEOHead() {
     };
 
     // Open Graph tags
-    updateMetaTag('og:title', 'TypingFlow - Modern Typing Experience');
-    updateMetaTag('og:description', 'Experience the future of typing tests with real-time analytics, interactive tutorials, and gamified challenges. Built for 2025.');
+    updateMetaTag('og:title', 'TypingFlow - World\'s Largest Hackathon Entry | AI-Powered Typing Coach');
+    updateMetaTag('og:description', 'Revolutionary typing test app built with Bolt.new. Features AI coaching, real-time multiplayer, and gamified learning. Competing for multiple hackathon prizes!');
     updateMetaTag('og:type', 'website');
     updateMetaTag('og:url', 'https://typing.waanfeetan.com');
     updateMetaTag('og:image', 'https://typing.waanfeetan.com/og-image.png');
 
     // Twitter Card tags
     updateNameTag('twitter:card', 'summary_large_image');
-    updateNameTag('twitter:title', 'TypingFlow - Modern Typing Experience');
-    updateNameTag('twitter:description', 'Experience the future of typing tests with real-time analytics, interactive tutorials, and gamified challenges. Built for 2025.');
+    updateNameTag('twitter:title', 'TypingFlow - World\'s Largest Hackathon Entry');
+    updateNameTag('twitter:description', 'AI-powered typing coach built with Bolt.new. Gamified learning, real-time multiplayer, and advanced analytics. #WorldsLargestHackathon');
     updateNameTag('twitter:image', 'https://typing.waanfeetan.com/og-image.png');
 
-    // Additional meta tags
-    updateNameTag('description', 'Modern typing test platform with real-time analytics, interactive tutorials, and gamified challenges. Experience the future of typing practice in 2025.');
-    updateNameTag('keywords', 'typing test, WPM, words per minute, typing speed, keyboard training, typing practice, typing tutor, 2025, modern typing');
-    updateNameTag('author', 'TypingFlow');
+    // Additional meta tags for hackathon
+    updateNameTag('description', 'TypingFlow: Revolutionary typing test app built with Bolt.new for the World\'s Largest Hackathon. Features AI coaching, multiplayer racing, gamified challenges, and advanced analytics. Targeting multiple prize categories including Creative Use of AI, Most Beautiful UI, and Future Unicorn.');
+    updateNameTag('keywords', 'typing test, AI coach, Bolt.new, hackathon, World\'s Largest Hackathon, WPM, typing speed, gamified learning, multiplayer, progressive web app, 2025');
+    updateNameTag('author', 'TypingFlow Team');
+    updateNameTag('robots', 'index, follow');
+
+    // Hackathon specific tags
+    updateNameTag('hackathon', 'World\'s Largest Hackathon');
+    updateNameTag('platform', 'Bolt.new');
+    updateNameTag('category', 'Education, AI, Gaming, Productivity');
 
     // Update title
-    document.title = 'TypingFlow - Modern Typing Experience';
+    document.title = 'TypingFlow - World\'s Largest Hackathon Entry | AI-Powered Typing Coach';
   }, []);
 
   return null;
