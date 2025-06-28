@@ -36,7 +36,7 @@ import { getRandomText, generateCustomText, getTextForDuration } from './data/te
 import { TestConfig } from './types';
 
 function App() {
-  const [currentView, setCurrentView] = useState('hackathon');
+  const [currentView, setCurrentView] = useState('test'); // Start with test view instead of hackathon
   const [showAdvancedMetrics, setShowAdvancedMetrics] = useState(false);
   const [config, setConfig] = useState<TestConfig>({
     mode: 'time',
@@ -51,7 +51,7 @@ function App() {
       : generateCustomText(config.wordLimit)
   );
 
-  const { notifications, addNotification, removeNotification } = useNotifications();
+  const { notifications, addNotification, removeNotification, clearAllNotifications } = useNotifications();
   const { trackTypingPerformance, trackError } = usePerformanceMonitoring();
 
   const {
@@ -83,14 +83,12 @@ function App() {
   const { wpmHistory, resetWPMTracking } = useWPMTracking(isActive && !isPaused, stats.wpm, stats.accuracy);
   const { metrics, addKeystroke, reset: resetAdvancedMetrics } = useAdvancedMetrics();
 
-  // Show hackathon showcase on first load
+  // Show hackathon showcase only once
   useEffect(() => {
     const hasSeenShowcase = localStorage.getItem('hasSeenHackathonShowcase');
     if (!hasSeenShowcase) {
       setCurrentView('hackathon');
       localStorage.setItem('hasSeenHackathonShowcase', 'true');
-    } else {
-      setCurrentView('test');
     }
   }, []);
 
@@ -103,7 +101,7 @@ function App() {
     }
   }, [config]);
 
-  // Track performance when test completes
+  // Track performance when test completes (only once per completion)
   useEffect(() => {
     if (isCompleted) {
       trackTypingPerformance({
@@ -113,15 +111,15 @@ function App() {
         errorCount: stats.incorrectChars
       });
 
-      // Show completion notification
-      addNotification({
+      // Show completion notification only once
+      const notificationId = addNotification({
         type: 'success',
         title: 'Test Completed!',
         message: `${stats.wpm} WPM with ${stats.accuracy}% accuracy`,
-        duration: 3000
+        duration: 4000
       });
     }
-  }, [isCompleted, stats, elapsedTime, trackTypingPerformance, addNotification]);
+  }, [isCompleted]); // Remove other dependencies to prevent multiple triggers
 
   // Handle keyboard input
   useEffect(() => {
@@ -145,6 +143,7 @@ function App() {
           resetTracking();
           resetWPMTracking();
           resetAdvancedMetrics();
+          clearAllNotifications(); // Clear notifications on restart
         }
       } catch (error) {
         trackError(error as Error, 'keyboard_input');
@@ -153,7 +152,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentView, handleKeyPress, restart, trackKeyPress, resetTracking, resetWPMTracking, addKeystroke, resetAdvancedMetrics, trackError]);
+  }, [currentView, handleKeyPress, restart, trackKeyPress, resetTracking, resetWPMTracking, addKeystroke, resetAdvancedMetrics, trackError, clearAllNotifications]);
 
   // Auto-focus input when switching to test view
   useEffect(() => {
@@ -168,6 +167,7 @@ function App() {
     resetTracking();
     resetWPMTracking();
     resetAdvancedMetrics();
+    clearAllNotifications();
   };
 
   const handleRestart = () => {
@@ -181,6 +181,7 @@ function App() {
     resetTracking();
     resetWPMTracking();
     resetAdvancedMetrics();
+    clearAllNotifications();
   };
 
   const handlePauseResume = () => {

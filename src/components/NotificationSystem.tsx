@@ -34,19 +34,23 @@ export function NotificationSystem({ notifications, onRemove }: NotificationSyst
     }
   };
 
+  // Limit to maximum 3 notifications visible at once
+  const visibleNotifications = notifications.slice(-3);
+
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
-      <AnimatePresence>
-        {notifications.map((notification) => {
+      <AnimatePresence mode="popLayout">
+        {visibleNotifications.map((notification) => {
           const Icon = getIcon(notification.type);
           const colors = getColors(notification.type);
           
           return (
             <motion.div
               key={notification.id}
+              layout
               initial={{ opacity: 0, x: 300, scale: 0.3 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 300, scale: 0.5 }}
+              exit={{ opacity: 0, x: 300, scale: 0.5, transition: { duration: 0.2 } }}
               className={`glass-card p-4 border ${colors}`}
             >
               <div className="flex items-start space-x-3">
@@ -78,18 +82,33 @@ export function NotificationSystem({ notifications, onRemove }: NotificationSyst
   );
 }
 
-// Hook for managing notifications
+// Hook for managing notifications with duplicate prevention
 export function useNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const addNotification = (notification: Omit<Notification, 'id'>) => {
+    // Check for duplicate notifications (same title and message)
+    const isDuplicate = notifications.some(n => 
+      n.title === notification.title && 
+      n.message === notification.message &&
+      n.type === notification.type
+    );
+
+    if (isDuplicate) {
+      return null; // Don't add duplicate
+    }
+
     const id = Math.random().toString(36).substr(2, 9);
     const newNotification = { ...notification, id };
     
-    setNotifications(prev => [...prev, newNotification]);
+    setNotifications(prev => {
+      // Keep only last 5 notifications to prevent memory issues
+      const updated = [...prev, newNotification].slice(-5);
+      return updated;
+    });
 
     // Auto-remove after duration
-    const duration = notification.duration || 5000;
+    const duration = notification.duration || 3000; // Reduced default duration
     setTimeout(() => {
       removeNotification(id);
     }, duration);
@@ -101,9 +120,14 @@ export function useNotifications() {
     setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
+  const clearAllNotifications = () => {
+    setNotifications([]);
+  };
+
   return {
     notifications,
     addNotification,
-    removeNotification
+    removeNotification,
+    clearAllNotifications
   };
 }
