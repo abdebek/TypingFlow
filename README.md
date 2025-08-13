@@ -122,7 +122,7 @@ Corporate training programs and skill assessment tools
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/typingflow.git
+   git clone https://github.com/abdebek/typingflow.git
    cd typingflow
    ```
 
