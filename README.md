@@ -1,4 +1,4 @@
-# TypingFlow - Modern Typing Experience
+# KeysRace - Modern Typing Experience
 
 A revolutionary typing test application that transforms traditional typing practice into an engaging, AI-powered learning experience. Built with modern web technologies to provide the most comprehensive typing improvement platform available.
 
